@@ -67,23 +67,23 @@ export default function FeedbackPage() {
   };
 
   return (
-    <div className="min-h-screen bg-wave-offwhite p-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF] ml-64 p-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="max-w-2xl mx-auto"
       >
-        <div className="bg-white rounded-xl p-8 shadow-sm">
-          <h1 className="text-2xl font-bold text-wave-forest mb-2">
+        <div className="bg-[#1a1333]/80 rounded-xl p-8 shadow-sm">
+          <h1 className="text-2xl font-bold text-white mb-2">
             We'd love to hear from you
           </h1>
-          <p className="text-wave-forest/80 mb-8">
+          <p className="text-white/80 mb-8">
             Share your thoughts, ideas, or report anything that felt off. We're always listening.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-wave-forest mb-4">
+              <label className="block text-sm font-medium text-white mb-4">
                 What would you like to share?
               </label>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -94,8 +94,8 @@ export default function FeedbackPage() {
                       key={option.value}
                       className={`relative flex flex-col p-4 rounded-xl border-2 cursor-pointer transition-all ${
                         type === option.value
-                          ? 'border-wave-forest bg-wave-forest/5 shadow-md'
-                          : 'border-gray-200 hover:border-wave-forest/50 hover:shadow-sm'
+                          ? 'border-[#6B4EFF] bg-[#6B4EFF]/5 shadow-md'
+                          : 'border-gray-200 hover:border-[#6B4EFF]/50 hover:shadow-sm'
                       }`}
                     >
                       <input
@@ -109,12 +109,12 @@ export default function FeedbackPage() {
                       <div className="flex items-center gap-3 mb-2">
                         <Icon className={`w-5 h-5 ${
                           type === option.value
-                            ? 'text-wave-forest'
+                            ? 'text-[#6B4EFF]'
                             : 'text-gray-400'
                         }`} />
-                        <span className="font-medium text-wave-forest">{option.label}</span>
+                        <span className="font-medium text-white">{option.label}</span>
                       </div>
-                      <p className="text-sm text-wave-forest/70">{option.description}</p>
+                      <p className="text-sm text-white/70">{option.description}</p>
                     </label>
                   );
                 })}
@@ -122,7 +122,7 @@ export default function FeedbackPage() {
             </div>
 
             <div>
-              <label htmlFor="message" className="block text-sm font-medium text-wave-forest mb-2">
+              <label htmlFor="message" className="block text-sm font-medium text-white mb-2">
                 Your Message
               </label>
               <textarea
@@ -130,7 +130,7 @@ export default function FeedbackPage() {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Tell us what's on your mind..."
-                className="w-full h-32 px-4 py-3 rounded-lg border border-gray-200 focus:border-wave-forest focus:ring-1 focus:ring-wave-forest outline-none resize-none"
+                className="w-full h-32 px-4 py-3 rounded-lg border border-gray-200 focus:border-[#6B4EFF] focus:ring-1 focus:ring-[#6B4EFF] outline-none resize-none"
               />
             </div>
 
@@ -138,7 +138,7 @@ export default function FeedbackPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="bg-wave-forest text-white py-2 px-6 rounded-lg hover:bg-wave-forest/90 transition-colors disabled:opacity-50 flex items-center gap-2"
+                className="bg-[#6B4EFF] text-white py-2 px-6 rounded-lg hover:bg-[#6B4EFF]/90 transition-colors disabled:opacity-50 flex items-center gap-2"
               >
                 {submitting ? (
                   <>

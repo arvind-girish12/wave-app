@@ -103,34 +103,31 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#f3e8ff] via-[#f5eafe] to-[#eaf6ff] p-8">
-        <div className="max-w-3xl mx-auto space-y-8">
-          <div className="h-8 w-48 bg-white/50 rounded animate-pulse"></div>
-          <div className="h-96 bg-white/50 rounded-lg animate-pulse"></div>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF] ml-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#6B4EFF] shadow-lg"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-wave-offwhite p-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF] ml-64 p-8">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="max-w-3xl mx-auto space-y-8"
       >
-        <h1 className="text-3xl font-bold text-wave-forest">Settings</h1>
+        <h1 className="text-3xl font-bold text-white">Settings</h1>
 
         {/* Profile Section */}
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white rounded-xl p-6 shadow-sm"
+          className="bg-[#1a1333]/80 rounded-xl p-6 shadow-sm"
         >
           <div className="flex items-center gap-4 mb-6">
-            <FaUser className="w-6 h-6 text-wave-forest" />
-            <h2 className="text-xl font-semibold text-wave-forest">Profile</h2>
+            <FaUser className="w-6 h-6 text-white" />
+            <h2 className="text-xl font-semibold text-white">Profile</h2>
           </div>
 
           <form onSubmit={handleProfileUpdate} className="space-y-6">
@@ -140,11 +137,11 @@ export default function SettingsPage() {
                 <img
                   src={avatarPreview}
                   alt="Profile"
-                  className="w-24 h-24 rounded-full object-cover border-2 border-wave-forest transition-transform group-hover:scale-105"
+                  className="w-24 h-24 rounded-full object-cover border-2 border-[#6B4EFF] transition-transform group-hover:scale-105"
                 />
                 <label
                   htmlFor="avatar"
-                  className="absolute bottom-0 right-0 p-2 bg-wave-forest text-white rounded-full cursor-pointer hover:bg-wave-forest/90 transition-colors shadow-lg"
+                  className="absolute bottom-0 right-0 p-2 bg-[#6B4EFF] text-white rounded-full cursor-pointer hover:bg-[#6B4EFF]/90 transition-colors shadow-lg"
                 >
                   <FaCamera className="w-4 h-4" />
                 </label>
@@ -157,7 +154,7 @@ export default function SettingsPage() {
                 />
               </div>
               <div>
-                <h3 className="font-medium text-gray-900">Profile Picture</h3>
+                <h3 className="font-medium text-gray-300">Profile Picture</h3>
                 <p className="text-sm text-gray-500">
                   Upload a new profile picture
                 </p>
@@ -166,7 +163,7 @@ export default function SettingsPage() {
 
             {/* Display Name */}
             <div>
-              <label htmlFor="display_name" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="display_name" className="block text-sm font-medium text-gray-300">
                 Display Name
               </label>
               <input
@@ -175,14 +172,14 @@ export default function SettingsPage() {
                 name="display_name"
                 defaultValue={profile.display_name}
                 placeholder="Display Name"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-wave-forest focus:ring-wave-forest transition-colors"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#6B4EFF] focus:ring-[#6B4EFF] transition-colors"
                 required
               />
             </div>
 
             {/* Pronouns */}
             <div>
-              <label htmlFor="pronouns" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="pronouns" className="block text-sm font-medium text-gray-300">
                 Pronouns (optional)
               </label>
               <input
@@ -191,14 +188,14 @@ export default function SettingsPage() {
                 name="pronouns"
                 defaultValue={profile.pronouns}
                 placeholder="e.g., he/him, she/her, they/them"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-wave-forest focus:ring-wave-forest transition-colors"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#6B4EFF] focus:ring-[#6B4EFF] transition-colors"
               />
             </div>
 
             <button
               type="submit"
               disabled={saving}
-              className="w-full bg-wave-forest text-white py-2 px-4 rounded-lg hover:bg-wave-forest/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full bg-[#6B4EFF] text-white py-2 px-4 rounded-lg hover:bg-[#6B4EFF]/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {saving ? (
                 <>
@@ -222,11 +219,11 @@ export default function SettingsPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-xl p-6 shadow-sm"
+          className="bg-[#1a1333]/80 rounded-xl p-6 shadow-sm"
         >
           <div className="flex items-center gap-4 mb-6">
-            <FaBell className="w-6 h-6 text-wave-forest" />
-            <h2 className="text-xl font-semibold text-wave-forest">Notifications</h2>
+            <FaBell className="w-6 h-6 text-white" />
+            <h2 className="text-xl font-semibold text-white">Notifications</h2>
           </div>
 
           <form onSubmit={handleSettingsUpdate} className="space-y-6">
@@ -234,7 +231,7 @@ export default function SettingsPage() {
             <div className="space-y-4">
               <div className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
                 <div>
-                  <h3 className="font-medium text-gray-900">Daily Mood Reminder</h3>
+                  <h3 className="font-medium text-gray-300">Daily Mood Reminder</h3>
                   <p className="text-sm text-gray-500">
                     Get reminded to log your mood each day
                   </p>
@@ -243,7 +240,7 @@ export default function SettingsPage() {
                   name="notify_mood_reminder"
                   defaultChecked={settings.notify_mood_reminder}
                   className={`${
-                    settings.notify_mood_reminder ? 'bg-wave-forest' : 'bg-gray-200'
+                    settings.notify_mood_reminder ? 'bg-[#6B4EFF]' : 'bg-gray-200'
                   } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
                 >
                   <span
@@ -256,7 +253,7 @@ export default function SettingsPage() {
 
               <div className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
                 <div>
-                  <h3 className="font-medium text-gray-900">Weekly Progress Summary</h3>
+                  <h3 className="font-medium text-gray-300">Weekly Progress Summary</h3>
                   <p className="text-sm text-gray-500">
                     Receive a weekly summary of your progress
                   </p>
@@ -265,7 +262,7 @@ export default function SettingsPage() {
                   name="notify_progress_summary"
                   defaultChecked={settings.notify_progress_summary}
                   className={`${
-                    settings.notify_progress_summary ? 'bg-wave-forest' : 'bg-gray-200'
+                    settings.notify_progress_summary ? 'bg-[#6B4EFF]' : 'bg-gray-200'
                   } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
                 >
                   <span
@@ -278,7 +275,7 @@ export default function SettingsPage() {
 
               <div className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
                 <div>
-                  <h3 className="font-medium text-gray-900">Journal Suggestions</h3>
+                  <h3 className="font-medium text-gray-300">Journal Suggestions</h3>
                   <p className="text-sm text-gray-500">
                     Get prompts for journal entries
                   </p>
@@ -287,7 +284,7 @@ export default function SettingsPage() {
                   name="notify_journal_nudge"
                   defaultChecked={settings.notify_journal_nudge}
                   className={`${
-                    settings.notify_journal_nudge ? 'bg-wave-forest' : 'bg-gray-200'
+                    settings.notify_journal_nudge ? 'bg-[#6B4EFF]' : 'bg-gray-200'
                   } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
                 >
                   <span
@@ -300,7 +297,7 @@ export default function SettingsPage() {
 
               <div className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
                 <div>
-                  <h3 className="font-medium text-gray-900">Exercise Streak Reminders</h3>
+                  <h3 className="font-medium text-gray-300">Exercise Streak Reminders</h3>
                   <p className="text-sm text-gray-500">
                     Get reminded to maintain your exercise streak
                   </p>
@@ -309,7 +306,7 @@ export default function SettingsPage() {
                   name="notify_exercise_streak"
                   defaultChecked={settings.notify_exercise_streak}
                   className={`${
-                    settings.notify_exercise_streak ? 'bg-wave-forest' : 'bg-gray-200'
+                    settings.notify_exercise_streak ? 'bg-[#6B4EFF]' : 'bg-gray-200'
                   } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
                 >
                   <span
@@ -324,7 +321,7 @@ export default function SettingsPage() {
             <button
               type="submit"
               disabled={saving}
-              className="w-full bg-wave-forest text-white py-2 px-4 rounded-lg hover:bg-wave-forest/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+              className="w-full bg-[#6B4EFF] text-white py-2 px-4 rounded-lg hover:bg-[#6B4EFF]/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {saving ? (
                 <>

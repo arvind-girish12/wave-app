@@ -79,21 +79,21 @@ export default function LanguagePage() {
   };
 
   return (
-    <div className="min-h-screen bg-wave-offwhite p-8">
+    <div className="min-h-screen bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF] ml-64 p-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="max-w-3xl mx-auto"
       >
-        <div className="bg-white rounded-xl p-8 shadow-sm">
-          <h1 className="text-2xl font-bold text-wave-forest mb-2">Language & Tone</h1>
-          <p className="text-wave-forest/80 mb-8">
+        <div className="bg-[#1a1333]/80 rounded-xl p-8 shadow-sm">
+          <h1 className="text-2xl font-bold text-white mb-2">Language & Tone</h1>
+          <p className="text-[#D1D5DB] mb-8">
             Customize how the AI communicates with you during your sessions.
           </p>
 
           <form onSubmit={handleSave} className="space-y-8">
             <div>
-              <label className="block text-sm font-medium text-wave-forest mb-4">
+              <label className="block text-sm font-medium text-[#D1D5DB] mb-4">
                 Select Your Preferred Tone
               </label>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -104,8 +104,8 @@ export default function LanguagePage() {
                       key={opt.value}
                       className={`relative flex flex-col p-6 rounded-xl border-2 cursor-pointer transition-all ${
                         preferences.preferred_tone === opt.value
-                          ? 'border-wave-forest bg-wave-forest/5 shadow-md'
-                          : 'border-gray-200 hover:border-wave-forest/50 hover:shadow-sm'
+                          ? 'border-[#6B4EFF] bg-[#6B4EFF]/5 shadow-md'
+                          : 'border-gray-200 hover:border-[#6B4EFF]/50 hover:shadow-sm'
                       }`}
                     >
                       <input
@@ -119,14 +119,14 @@ export default function LanguagePage() {
                       <div className="flex items-center gap-3 mb-3">
                         <Icon className={`w-6 h-6 ${
                           preferences.preferred_tone === opt.value
-                            ? 'text-wave-forest'
-                            : 'text-gray-400'
+                            ? 'text-[#6B4EFF]'
+                            : 'text-[#D1D5DB]'
                         }`} />
-                        <span className="font-medium text-wave-forest">{opt.label}</span>
+                        <span className="font-medium text-white">{opt.label}</span>
                       </div>
-                      <p className="text-sm text-wave-forest/80 mb-4">{opt.description}</p>
+                      <p className="text-sm text-[#D1D5DB] mb-4">{opt.description}</p>
                       <div className="mt-auto">
-                        <p className="text-sm text-wave-forest/70 italic">
+                        <p className="text-sm text-[#D1D5DB] italic">
                           "{opt.preview}"
                         </p>
                       </div>
