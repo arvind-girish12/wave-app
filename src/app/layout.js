@@ -16,6 +16,9 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <link href="https://fonts.googleapis.com/css2?family=Gloria+Hallelujah&display=swap" rel="stylesheet" />
+      </head>
       <body className={`${inter.className} antialiased`}>
         <Providers>
           <LayoutWrapper>{children}</LayoutWrapper>

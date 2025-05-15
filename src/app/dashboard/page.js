@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../../utils/supabaseClient";
 import OnboardingModal from "../../components/OnboardingModal";
+import WaitlistModal from "../../components/WaitlistModal";
 import DashboardSidebar from "../../components/DashboardSidebar";
 import { CheckCircleIcon, CloudIcon, SunIcon, MoonIcon, SparklesIcon } from '@heroicons/react/24/solid';
 
@@ -15,6 +16,7 @@ export default function Dashboard() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(true);
+  const [showWaitlist, setShowWaitlist] = useState(false);
   const [showSession, setShowSession] = useState(false);
   const [sessionComplete, setSessionComplete] = useState(false);
   const [latestSessionId, setLatestSessionId] = useState(null);
@@ -22,6 +24,7 @@ export default function Dashboard() {
   const [analyzing, setAnalyzing] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [analysis, setAnalysis] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -33,6 +36,20 @@ export default function Dashboard() {
       }
       
       setUser(session.user);
+      
+      // Fetch user profile to check session count
+      const { data: profile, error } = await supabase
+        .from('user_profiles')
+        .select('*')
+        .eq('user_id', session.user.id)
+        .single();
+      
+      if (error) {
+        console.error('Error fetching user profile:', error);
+      } else {
+        setUserProfile(profile);
+      }
+      
       setLoading(false);
     };
 
@@ -61,7 +78,11 @@ export default function Dashboard() {
       if (data && data.event) {
         switch (data.event) {
           case 'onStart':
-            // Session started
+            // Check if user has reached session limit
+            if (userProfile && userProfile.session_count >= userProfile.session_limit) {
+              setShowWaitlist(true);
+              return;
+            }
             break;
           case 'onStop':
             setLatestSessionId(data.sessionId);
@@ -95,7 +116,7 @@ export default function Dashboard() {
     };
     window.addEventListener('message', handleMessage);
     return () => window.removeEventListener('message', handleMessage);
-  }, []);
+  }, [userProfile]);
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -170,8 +191,8 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-[#f3e8ff] via-[#f5eafe] to-[#eaf6ff]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#b3c6ff] shadow-lg"></div>
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF] ml-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#6B4EFF] shadow-lg"></div>
       </div>
     );
   }
@@ -180,7 +201,7 @@ export default function Dashboard() {
     <div className="min-h-screen flex ml-64" style={{ background: 'linear-gradient(135deg, #0A0613 0%, #2B176B 40%, #3B2BFF 70%, #F7BFA3 100%)' }}>
       <main className="flex-1 flex flex-col items-center justify-center p-8">
         {loading ? (
-          <div className="flex justify-center items-center h-screen">
+          <div className="flex justify-center items-center h-screen bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF] ml-64">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#6B4EFF] shadow-lg"></div>
           </div>
         ) : analyzing ? (
@@ -367,20 +388,23 @@ export default function Dashboard() {
             )}
           </div>
         ) : (
-          <div className="w-full max-w-4xl embedded-content flex justify-center">
-            <iframe
-              ref={iframeRef}
-              src="https://app.toughtongueai.com/embed/basic/681df5ff4e0a1c83aae411ec?color=violet&useAvatar=true&avatarId=1&bg=%23170e32&buttonColor=%23d1c1d7"
-              width="60%"
-              height="600px"
-              frameBorder="0"
-              allow="microphone"
-              className="rounded-lg shadow-lg"
-            />
-          </div>
+          !showOnboarding && !showWaitlist && (
+            <div className="w-full max-w-4xl embedded-content flex justify-center">
+              <iframe
+                ref={iframeRef}
+                src="https://app.toughtongueai.com/embed/681df5ff4e0a1c83aae411ec?bg=%23170e32&skipPrecheck=true&buttonColor=%23d1c1d7"
+                width="100%"
+                height="700px"
+                frameBorder="0"
+                allow="microphone; camera; display-capture"
+                className="rounded-lg shadow-lg"
+              />
+            </div>
+          )
         )}
       </main>
       {showOnboarding && <OnboardingModal onClose={handleCloseOnboarding} />}
+      {showWaitlist && <WaitlistModal onClose={() => setShowWaitlist(false)} />}
     </div>
   );
 } 
