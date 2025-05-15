@@ -19,7 +19,7 @@ export default function LayoutWrapper({ children }) {
   }
 
   return (
-    <div className="min-h-screen flex bg-wave-offwhite">
+    <div className="min-h-screen flex bg-gradient-to-br from-purple-100 via-purple-200 to-purple-300">
       <DashboardSidebar onLogout={handleLogout} />
       <main className="flex-1">{children}</main>
     </div>

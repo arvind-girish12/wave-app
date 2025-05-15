@@ -25,8 +25,8 @@ export default function Home() {
 
   // This will briefly show while checking authentication and redirecting
   return (
-    <div className="flex justify-center items-center h-screen bg-wave-offwhite">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-wave-forest"></div>
+    <div className="flex justify-center items-center h-screen bg-gradient-to-br from-purple-100 via-purple-200 to-purple-300">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
     </div>
   );
 } 
