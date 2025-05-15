@@ -6,10 +6,11 @@ import { supabase } from "../../utils/supabaseClient";
 export default function Login() {
   const handleGoogleLogin = async () => {
     try {
+      const redirectUrl = typeof window !== 'undefined' ? window.location.origin : '';
       await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: `${window.location.origin}/dashboard`
+          redirectTo: `${redirectUrl}/dashboard`
         }
       });
     } catch (err) {

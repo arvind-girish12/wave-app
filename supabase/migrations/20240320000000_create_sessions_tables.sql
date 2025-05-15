@@ -6,7 +6,16 @@ CREATE TABLE sessions (
     agent_type TEXT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-    is_archived BOOLEAN DEFAULT false NOT NULL
+    is_archived BOOLEAN DEFAULT false NOT NULL,
+    transcript_summary JSONB,
+    emotional_analysis JSONB,
+    cognitive_patterns JSONB,
+    triggers_identified JSONB,
+    user_intent JSONB,
+    recommendations JSONB,
+    insight_tags TEXT[],
+    follow_up_suggestions TEXT[],
+    session_id TEXT UNIQUE
 );
 
 -- Create messages table with explicit foreign key constraint
