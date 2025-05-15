@@ -185,15 +185,15 @@ export default function MoodTrackerPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-wave-offwhite p-8">
+      <div className="min-h-screen bg-gradient-to-br from-[#f3e8ff] via-[#f5eafe] to-[#eaf6ff] p-8">
         <div className="max-w-6xl mx-auto">
-          <div className="h-8 w-48 bg-gray-200 rounded animate-pulse mb-8"></div>
+          <div className="h-8 w-48 bg-white/50 rounded animate-pulse mb-8"></div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="h-32 bg-gray-200 rounded-xl animate-pulse"></div>
+              <div key={i} className="h-32 bg-white/50 rounded-xl animate-pulse"></div>
             ))}
           </div>
-          <div className="h-96 bg-gray-200 rounded-xl animate-pulse"></div>
+          <div className="h-96 bg-white/50 rounded-xl animate-pulse"></div>
         </div>
       </div>
     );

@@ -103,10 +103,10 @@ export default function SettingsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-wave-offwhite p-8">
+      <div className="min-h-screen bg-gradient-to-br from-[#f3e8ff] via-[#f5eafe] to-[#eaf6ff] p-8">
         <div className="max-w-3xl mx-auto space-y-8">
-          <div className="h-8 w-48 bg-gray-200 rounded animate-pulse"></div>
-          <div className="h-96 bg-gray-200 rounded-lg animate-pulse"></div>
+          <div className="h-8 w-48 bg-white/50 rounded animate-pulse"></div>
+          <div className="h-96 bg-white/50 rounded-lg animate-pulse"></div>
         </div>
       </div>
     );

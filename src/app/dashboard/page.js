@@ -170,244 +170,211 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-100 via-purple-200 to-purple-300">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500 shadow-lg"></div>
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-[#f3e8ff] via-[#f5eafe] to-[#eaf6ff]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#b3c6ff] shadow-lg"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-purple-100 via-purple-200 to-purple-300">
+    <div className="min-h-screen flex ml-64" style={{ background: 'linear-gradient(135deg, #0A0613 0%, #2B176B 40%, #3B2BFF 70%, #F7BFA3 100%)' }}>
       <main className="flex-1 flex flex-col items-center justify-center p-8">
         {loading ? (
-          <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-100 via-purple-200 to-purple-300">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500 shadow-lg"></div>
+          <div className="flex justify-center items-center h-screen">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#6B4EFF] shadow-lg"></div>
           </div>
         ) : analyzing ? (
-          <div className="w-full max-w-2xl flex flex-col items-center bg-white/70 rounded-3xl shadow-2xl p-10 border border-purple-200">
-            <h1 className="text-2xl md:text-3xl font-bold text-purple-900 mb-4 text-center">We're gently reviewing your session…</h1>
-            <div className="w-full bg-purple-200 rounded-full h-4 mb-6 overflow-hidden">
-              <div className="bg-gradient-to-r from-purple-400 to-purple-600 h-4 rounded-full animate-pulse" style={{ width: '100%' }}></div>
+          <div className="w-full max-w-2xl flex flex-col items-center bg-[#1a1333]/80 rounded-3xl shadow-2xl p-10 border border-[#3B2BFF]">
+            <h1 className="text-2xl md:text-3xl font-bold text-white mb-4 text-center">We're gently reviewing your session…</h1>
+            <div className="w-full bg-[#3B2BFF]/30 rounded-full h-4 mb-6 overflow-hidden">
+              <div className="bg-gradient-to-r from-[#6B4EFF] to-[#F7BFA3] h-4 rounded-full animate-pulse" style={{ width: '100%' }}></div>
             </div>
-            <p className="text-purple-800 text-lg text-center">This may take a moment. Feel free to take a deep breath while we prepare your insights.</p>
+            <p className="text-[#D1D5DB] text-lg text-center">This may take a moment. Feel free to take a deep breath while we prepare your insights.</p>
           </div>
-        ) : transcript ? (
-          analyzing || !analysis ? (
-            <div className="w-full max-w-2xl flex flex-col items-center bg-white/70 rounded-3xl shadow-2xl p-10 border border-purple-200">
-              <h1 className="text-2xl md:text-3xl font-bold text-purple-900 mb-4 text-center">We're gently reviewing your session…</h1>
-              <div className="w-full bg-purple-200 rounded-full h-4 mb-6 overflow-hidden">
-                <div className="bg-gradient-to-r from-purple-400 to-purple-600 h-4 rounded-full animate-pulse" style={{ width: '100%' }}></div>
-              </div>
-              <p className="text-purple-800 text-lg text-center">This may take a moment. Feel free to take a deep breath while we prepare your insights.</p>
+        ) : transcript && analysis ? (
+          <div className="w-full max-w-2xl flex flex-col items-center gap-8 bg-[#1a1333]/80 rounded-3xl shadow-2xl p-8 border border-[#3B2BFF]">
+            {/* Today, you felt... */}
+            <div className="w-full bg-[#2B176B]/80 rounded-xl shadow p-6 mb-2 border border-[#6B4EFF]">
+              <h2 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">
+                <SparklesIcon className="w-6 h-6 text-[#D1D5DB]" /> <span className="text-white">Today, you felt…</span>
+              </h2>
+              <p className="text-white text-base">{analysis.transcript_summary?.summary || '—'}</p>
             </div>
-          ) : (
-            <div className="w-full max-w-2xl flex flex-col items-center gap-8 bg-white/70 rounded-3xl shadow-2xl p-8 border border-purple-200">
-              {/* Today, you felt... */}
-              <div className="w-full bg-white/80 rounded-xl shadow p-6 mb-2 border border-purple-300">
-                <h2 className="text-lg font-semibold text-purple-900 mb-2 flex items-center gap-2">
-                  <SparklesIcon className="w-6 h-6 text-purple-500" /> <span className="text-purple-900">Today, you felt…</span>
-                </h2>
-                <p className="text-purple-800 text-base">{analysis.transcript_summary?.summary || '—'}</p>
+
+            {/* What You Were Carrying */}
+            {Array.isArray(analysis.emotional_analysis?.primary_emotions) && analysis.emotional_analysis.primary_emotions.length > 0 && (
+              <div className="w-full mb-2">
+                <h3 className="text-md font-semibold text-white mb-3">What You Were Carrying</h3>
+                <div className="flex flex-wrap gap-4">
+                  {analysis.emotional_analysis.primary_emotions.map((emotion, idx) => (
+                    <div key={emotion+idx} className="flex flex-col items-center">
+                      <div className="rounded-full bg-[#3B2BFF]/30 shadow p-4 text-2xl mb-1">
+                        {/* Emoji or icon can be mapped here if desired */}
+                        {emotion === 'anxious' && '😰'}
+                        {emotion === 'sad' || emotion === 'sadness' ? '😢' : ''}
+                        {emotion === 'tired' && '😴'}
+                        {emotion === 'hopeful' && '😊'}
+                        {emotion === 'frustrated' && '😠'}
+                        {emotion === 'overwhelmed' && '😵‍💫'}
+                        {emotion === 'self-critical' && '🤔'}
+                        {emotion === 'stressed' || emotion === 'stress' ? '😣' : ''}
+                        {emotion === 'rest' && '🛌'}
+                      </div>
+                      <span className="text-white text-sm font-medium capitalize">{emotion}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
+            )}
 
-              {/* What You Were Carrying */}
-              {Array.isArray(analysis.emotional_analysis?.primary_emotions) && analysis.emotional_analysis.primary_emotions.length > 0 && (
-                <div className="w-full mb-2">
-                  <h3 className="text-md font-semibold text-purple-900 mb-3">What You Were Carrying</h3>
-                  <div className="flex flex-wrap gap-4">
-                    {analysis.emotional_analysis.primary_emotions.map((emotion, idx) => (
-                      <div key={emotion+idx} className="flex flex-col items-center">
-                        <div className="rounded-full bg-purple-marker-3 shadow p-4 text-2xl mb-1">
-                          {/* Emoji or icon can be mapped here if desired */}
-                          {emotion === 'anxious' && '😰'}
-                          {emotion === 'sad' || emotion === 'sadness' ? '😢' : ''}
-                          {emotion === 'tired' && '😴'}
-                          {emotion === 'hopeful' && '😊'}
-                          {emotion === 'frustrated' && '😠'}
-                          {emotion === 'overwhelmed' && '😵‍💫'}
-                          {emotion === 'self-critical' && '🤔'}
-                          {emotion === 'stressed' || emotion === 'stress' ? '😣' : ''}
-                          {emotion === 'rest' && '🛌'}
-                        </div>
-                        <span className="text-purple-800 text-sm font-medium capitalize">{emotion}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Emotional Weather */}
-              {Array.isArray(analysis.emotional_analysis?.mood_keywords) && analysis.emotional_analysis.mood_keywords.length > 0 && (
-                <div className="w-full mb-2">
-                  <h3 className="text-md font-semibold text-purple-900 mb-3">Your Emotional Weather</h3>
-                  <div className="flex flex-wrap gap-4">
-                    {analysis.emotional_analysis.mood_keywords.map((mood, idx) => (
-                      <div key={mood+idx} className="flex flex-col items-center">
-                        <CloudIcon className="w-8 h-8 text-purple-500 mb-1" />
-                        <span className="text-purple-800 text-sm font-medium capitalize">{mood}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Observations */}
-              {analysis.transcript_summary?.key_points && analysis.transcript_summary.key_points.length > 0 && (
-                <div className="w-full bg-white/80 rounded-xl shadow p-6 border border-purple-300">
-                  <h3 className="text-md font-semibold text-purple-900 mb-2">Observations</h3>
-                  <ul className="list-disc pl-6 text-purple-800/90">
-                    {analysis.transcript_summary.key_points.map((point, idx) => (
-                      <li key={idx} className="text-purple-800">{point}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Cognitive Patterns */}
-              {(analysis.cognitive_patterns?.thinking_distortions?.length > 0 || analysis.cognitive_patterns?.self_talk_patterns?.length > 0) && (
-                <div className="w-full bg-white/80 rounded-xl shadow p-6 border border-purple-300">
-                  <h3 className="text-md font-semibold text-purple-900 mb-2">Cognitive Patterns</h3>
-                  {analysis.cognitive_patterns?.thinking_distortions?.length > 0 && (
-                    <div className="mb-2">
-                      <span className="font-medium text-purple-900">Thinking Distortions:</span>
-                      <ul className="list-disc pl-6">
-                        {analysis.cognitive_patterns.thinking_distortions.map((d, idx) => (
-                          <li key={idx} className="text-purple-800">{d}</li>
-                        ))}
-                      </ul>
+            {/* Emotional Weather */}
+            {Array.isArray(analysis.emotional_analysis?.mood_keywords) && analysis.emotional_analysis.mood_keywords.length > 0 && (
+              <div className="w-full mb-2">
+                <h3 className="text-md font-semibold text-white mb-3">Your Emotional Weather</h3>
+                <div className="flex flex-wrap gap-4">
+                  {analysis.emotional_analysis.mood_keywords.map((mood, idx) => (
+                    <div key={mood+idx} className="flex flex-col items-center">
+                      <CloudIcon className="w-8 h-8 text-[#6B4EFF] mb-1" />
+                      <span className="text-white text-sm font-medium capitalize">{mood}</span>
                     </div>
-                  )}
-                  {analysis.cognitive_patterns?.self_talk_patterns?.length > 0 && (
-                    <div>
-                      <span className="font-medium text-purple-900">Self-Talk Patterns:</span>
-                      <ul className="list-disc pl-6">
-                        {analysis.cognitive_patterns.self_talk_patterns.map((d, idx) => (
-                          <li key={idx} className="text-purple-800">{d}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
+                  ))}
                 </div>
-              )}
+              </div>
+            )}
 
-              {/* Triggers Identified */}
-              {Array.isArray(analysis.triggers_identified) && analysis.triggers_identified.length > 0 && (
-                <div className="w-full bg-white/80 rounded-xl shadow p-6 border border-purple-300">
-                  <h3 className="text-md font-semibold text-purple-900 mb-2">Triggers Identified</h3>
-                  <ul className="list-disc pl-6">
-                    {analysis.triggers_identified.map((trigger, idx) => (
-                      <li key={idx} className="text-purple-800"><span className="capitalize font-medium text-purple-900">{trigger.type}:</span> {trigger.description}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+            {/* Observations */}
+            {analysis.transcript_summary?.key_points && analysis.transcript_summary.key_points.length > 0 && (
+              <div className="w-full bg-[#2B176B]/80 rounded-xl shadow p-6 border border-[#6B4EFF]">
+                <h3 className="text-md font-semibold text-white mb-2">Observations</h3>
+                <ul className="list-disc pl-6 text-white/90">
+                  {analysis.transcript_summary.key_points.map((point, idx) => (
+                    <li key={idx} className="text-white">{point}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
-              {/* User Intent */}
-              {(analysis.user_intent?.expressed_goals?.length > 0 || analysis.user_intent?.support_requested?.length > 0) && (
-                <div className="w-full bg-white/80 rounded-xl shadow p-6 border border-purple-300">
-                  <h3 className="text-md font-semibold text-purple-900 mb-2">Your Intentions</h3>
-                  {analysis.user_intent?.expressed_goals?.length > 0 && (
-                    <div className="mb-2">
-                      <span className="font-medium text-purple-900">Expressed Goals:</span>
-                      <ul className="list-disc pl-6">
-                        {analysis.user_intent.expressed_goals.map((goal, idx) => (
-                          <li key={idx} className="text-purple-800">{goal}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  {analysis.user_intent?.support_requested?.length > 0 && (
-                    <div>
-                      <span className="font-medium text-purple-900">Support Requested:</span>
-                      <ul className="list-disc pl-6">
-                        {analysis.user_intent.support_requested.map((req, idx) => (
-                          <li key={idx} className="text-purple-800">{req}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Recommendations / Tiny Mission */}
-              {analysis.recommendations && (
-                <div className="w-full bg-white/80 rounded-xl shadow p-6 border border-purple-300">
-                  <h3 className="text-md font-semibold text-purple-900 mb-2">Tonight's Tiny Mission</h3>
-                  {Array.isArray(analysis.recommendations.exercises) && analysis.recommendations.exercises.length > 0 && (
-                    <ul className="mb-2 flex flex-wrap gap-3">
-                      {analysis.recommendations.exercises.map((ex, idx) => (
-                        <li key={idx} className="flex items-center gap-2 bg-purple-marker-1 px-3 py-2 rounded-full text-purple-800 text-sm font-medium shadow">
-                          <CheckCircleIcon className="w-4 h-4 text-purple-500" />
-                          <span className="text-purple-800">{ex.name}</span> <span className="text-xs text-purple-800/60">({ex.type}, {ex.duration_sec ? `${ex.duration_sec}s` : ex.guide_steps ? `${ex.guide_steps} steps` : ''})</span>
-                        </li>
+            {/* Cognitive Patterns */}
+            {(analysis.cognitive_patterns?.thinking_distortions?.length > 0 || analysis.cognitive_patterns?.self_talk_patterns?.length > 0) && (
+              <div className="w-full bg-[#2B176B]/80 rounded-xl shadow p-6 border border-[#6B4EFF]">
+                <h3 className="text-md font-semibold text-white mb-2">Cognitive Patterns</h3>
+                {analysis.cognitive_patterns?.thinking_distortions?.length > 0 && (
+                  <div className="mb-2">
+                    <span className="font-medium text-white">Thinking Distortions:</span>
+                    <ul className="list-disc pl-6">
+                      {analysis.cognitive_patterns.thinking_distortions.map((d, idx) => (
+                        <li key={idx} className="text-white">{d}</li>
                       ))}
                     </ul>
-                  )}
-                  {analysis.recommendations.journal_prompt && (
-                    <div className="bg-purple-500/40 rounded p-3 text-purple-800 text-sm italic">
-                      {analysis.recommendations.journal_prompt}
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Insight Tags */}
-              {Array.isArray(analysis.insight_tags) && analysis.insight_tags.length > 0 && (
-                <div className="w-full mb-2">
-                  <h3 className="text-md font-semibold text-purple-900 mb-3">Insight Tags</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {analysis.insight_tags.map((tag, idx) => (
-                      <span key={tag+idx} className="bg-purple-marker-1 text-purple-800 px-3 py-1 rounded-full text-xs font-medium shadow">{tag}</span>
-                    ))}
                   </div>
-                </div>
-              )}
+                )}
+                {analysis.cognitive_patterns?.self_talk_patterns?.length > 0 && (
+                  <div>
+                    <span className="font-medium text-white">Self-Talk Patterns:</span>
+                    <ul className="list-disc pl-6">
+                      {analysis.cognitive_patterns.self_talk_patterns.map((d, idx) => (
+                        <li key={idx} className="text-white">{d}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
 
-              {/* Follow Up Suggestions */}
-              {Array.isArray(analysis.follow_up_suggestions) && analysis.follow_up_suggestions.length > 0 && (
-                <div className="w-full bg-white/80 rounded-xl shadow p-6 border border-purple-300">
-                  <h3 className="text-md font-semibold text-purple-900 mb-2">Gentle Suggestions for Tomorrow</h3>
-                  <ul className="list-disc pl-6">
-                    {analysis.follow_up_suggestions.map((sugg, idx) => (
-                      <li key={idx} className="text-purple-800">{sugg}</li>
+            {/* Triggers Identified */}
+            {Array.isArray(analysis.triggers_identified) && analysis.triggers_identified.length > 0 && (
+              <div className="w-full bg-[#2B176B]/80 rounded-xl shadow p-6 border border-[#6B4EFF]">
+                <h3 className="text-md font-semibold text-white mb-2">Triggers Identified</h3>
+                <ul className="list-disc pl-6">
+                  {analysis.triggers_identified.map((trigger, idx) => (
+                    <li key={idx} className="text-white"><span className="capitalize font-medium text-white">{trigger.type}:</span> {trigger.description}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* User Intent */}
+            {(analysis.user_intent?.expressed_goals?.length > 0 || analysis.user_intent?.support_requested?.length > 0) && (
+              <div className="w-full bg-[#2B176B]/80 rounded-xl shadow p-6 border border-[#6B4EFF]">
+                <h3 className="text-md font-semibold text-white mb-2">Your Intentions</h3>
+                {analysis.user_intent?.expressed_goals?.length > 0 && (
+                  <div className="mb-2">
+                    <span className="font-medium text-white">Expressed Goals:</span>
+                    <ul className="list-disc pl-6">
+                      {analysis.user_intent.expressed_goals.map((goal, idx) => (
+                        <li key={idx} className="text-white">{goal}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {analysis.user_intent?.support_requested?.length > 0 && (
+                  <div>
+                    <span className="font-medium text-white">Support Requested:</span>
+                    <ul className="list-disc pl-6">
+                      {analysis.user_intent.support_requested.map((req, idx) => (
+                        <li key={idx} className="text-white">{req}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Recommendations / Tiny Mission */}
+            {analysis.recommendations && (
+              <div className="w-full bg-[#2B176B]/80 rounded-xl shadow p-6 border border-[#6B4EFF]">
+                <h3 className="text-md font-semibold text-white mb-2">Tonight's Tiny Mission</h3>
+                {Array.isArray(analysis.recommendations.exercises) && analysis.recommendations.exercises.length > 0 && (
+                  <ul className="mb-2 flex flex-wrap gap-3">
+                    {analysis.recommendations.exercises.map((ex, idx) => (
+                      <li key={idx} className="flex items-center gap-2 bg-[#3B2BFF]/30 px-3 py-2 rounded-full text-white text-sm font-medium shadow">
+                        <CheckCircleIcon className="w-4 h-4 text-[#6B4EFF]" />
+                        <span className="text-white">{ex.name}</span> <span className="text-xs text-white/60">({ex.type}, {ex.duration_sec ? `${ex.duration_sec}s` : ex.guide_steps ? `${ex.guide_steps} steps` : ''})</span>
+                      </li>
                     ))}
                   </ul>
-                </div>
-              )}
-            </div>
-          )
-        ) : !showSession ? (
-          <div className="w-full max-w-2xl flex flex-col items-center">
-            <h1 className="text-2xl font-bold text-purple-900 mb-8">
-              {sessionComplete ? "Great job! Let's analyze your session" : "Perfect timing!"}
-            </h1>
-            <div className="w-48 h-48 rounded-full bg-purple-400 mb-8 flex items-center justify-center shadow-lg">
-              {sessionComplete && (
-                <div className="text-4xl">🎉</div>
-              )}
-            </div>
-            <div className="flex flex-col gap-4 w-full max-w-md">
-              <button 
-                onClick={sessionComplete ? handleAnalyzeSession : handleBeginSession}
-                className="bg-purple-500 text-white font-semibold py-3 rounded-lg shadow hover:bg-purple-600 transition-colors"
-              >
-                {sessionComplete ? "Analyze Session" : "Begin Session"}
-              </button>
-              <div className="flex gap-2 justify-center">
-                <button className="bg-gray-100 text-purple-800 px-4 py-1 rounded font-medium">Classic</button>
-                <button className="bg-gray-200 text-purple-800 px-4 py-1 rounded font-medium opacity-60 cursor-not-allowed">Guided</button>
+                )}
+                {analysis.recommendations.journal_prompt && (
+                  <div className="bg-[#6B4EFF]/40 rounded p-3 text-white text-sm italic">
+                    {analysis.recommendations.journal_prompt}
+                  </div>
+                )}
               </div>
-            </div>
+            )}
+
+            {/* Insight Tags */}
+            {Array.isArray(analysis.insight_tags) && analysis.insight_tags.length > 0 && (
+              <div className="w-full mb-2">
+                <h3 className="text-md font-semibold text-white mb-3">Insight Tags</h3>
+                <div className="flex flex-wrap gap-2">
+                  {analysis.insight_tags.map((tag, idx) => (
+                    <span key={tag+idx} className="bg-[#3B2BFF]/30 text-white px-3 py-1 rounded-full text-xs font-medium shadow">{tag}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Follow Up Suggestions */}
+            {Array.isArray(analysis.follow_up_suggestions) && analysis.follow_up_suggestions.length > 0 && (
+              <div className="w-full bg-[#2B176B]/80 rounded-xl shadow p-6 border border-[#6B4EFF]">
+                <h3 className="text-md font-semibold text-white mb-2">Gentle Suggestions for Tomorrow</h3>
+                <ul className="list-disc pl-6">
+                  {analysis.follow_up_suggestions.map((sugg, idx) => (
+                    <li key={idx} className="text-white">{sugg}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         ) : (
-          <div className="w-full max-w-4xl">
+          <div className="w-full max-w-4xl embedded-content flex justify-center">
             <iframe
               ref={iframeRef}
-              src={`https://app.toughtongueai.com/embed/681df5ff4e0a1c83aae411ec?bg=transparent&skipPrecheck=true&userEmail=${user?.email}`}
-              width="100%"
-              height="700px"
+              src="https://app.toughtongueai.com/embed/basic/681df5ff4e0a1c83aae411ec?color=violet&useAvatar=true&avatarId=1&bg=%23170e32&buttonColor=%23d1c1d7"
+              width="60%"
+              height="600px"
               frameBorder="0"
-              allow="microphone; camera; display-capture"
+              allow="microphone"
               className="rounded-lg shadow-lg"
             />
           </div>

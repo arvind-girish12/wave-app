@@ -64,8 +64,8 @@ export default function ProfilePage() {
 
   if (!profile || !stats) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-wave-offwhite">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-wave-forest"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#f3e8ff] via-[#f5eafe] to-[#eaf6ff]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#b3c6ff] shadow-lg"></div>
       </div>
     );
   }

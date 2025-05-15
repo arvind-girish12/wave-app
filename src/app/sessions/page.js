@@ -24,49 +24,37 @@ export default function SessionsPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-purple-100 via-purple-200 to-purple-300">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF]">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#6B4EFF] shadow-lg"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-purple-200 to-purple-300 p-8 pl-72">
-      <h1 className="text-3xl font-bold text-purple-900 mb-8 text-center drop-shadow">Your Sessions</h1>
+    <div className="min-h-screen bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF] ml-64 p-8">
+      <h1 className="text-3xl font-bold text-white mb-8">Your Sessions</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {sessions.map((session) => (
           <div
             key={session.id}
-            className="bg-white/80 rounded-2xl shadow-xl border-2 border-purple-200 p-6 cursor-pointer hover:shadow-2xl hover:border-purple-400 transition-all flex flex-col gap-2"
+            className="bg-[#1a1333]/80 rounded-2xl shadow-xl p-6 border-2 border-[#6B4EFF] flex flex-col gap-4 hover:shadow-2xl transition-shadow cursor-pointer"
             onClick={() => router.push(`/sessions/${session.id}`)}
           >
             <div className="flex items-center justify-between mb-2">
-              <span className="text-purple-900 font-semibold text-lg truncate max-w-[60%]">
-                {session.topic || "Untitled Session"}
-              </span>
-              <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded-full">
-                {session.agent_type || 'Anxiety Coach'}
-              </span>
+              <span className="text-xs bg-[#2B176B]/80 text-[#D1D5DB] px-3 py-1 rounded-full">{session.agent_type}</span>
+              <span className="text-xs text-[#D1D5DB]">{new Date(session.created_at).toLocaleString()}</span>
             </div>
-            <div className="text-sm text-purple-700 mb-1">
-              {new Date(session.created_at).toLocaleString()}
+            <h2 className="text-xl font-semibold text-white mb-2 line-clamp-1">{session.topic || 'Untitled Session'}</h2>
+            <p className="text-[#D1D5DB] text-sm line-clamp-2 mb-2">{session.transcript_summary?.summary || '—'}</p>
+            <div className="flex flex-wrap gap-2 mb-2">
+              {Array.isArray(session.insight_tags) && session.insight_tags.map((tag, idx) => (
+                <span key={tag+idx} className="bg-[#3B2BFF]/30 text-white px-3 py-1 rounded-full text-xs font-medium shadow">{tag}</span>
+              ))}
             </div>
-            <div className="text-purple-900 text-sm line-clamp-3 mb-2">
-              {session.transcript_summary?.summary || "No summary available."}
-            </div>
-            {/* Insight Tags */}
-            {Array.isArray(session.insight_tags) && session.insight_tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-2">
-                {session.insight_tags.map((tag, idx) => (
-                  <span key={tag+idx} className="bg-purple-200 text-purple-800 px-3 py-1 rounded-full text-xs font-medium shadow">{tag}</span>
-                ))}
-              </div>
-            )}
-            {/* Emotional Weather */}
-            {session.emotional_analysis?.mood_keywords && Array.isArray(session.emotional_analysis.mood_keywords) && session.emotional_analysis.mood_keywords.length > 0 && (
+            {Array.isArray(session.emotional_analysis?.mood_keywords) && session.emotional_analysis.mood_keywords.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-2">
                 {session.emotional_analysis.mood_keywords.map((mood, idx) => (
-                  <span key={mood+idx} className="bg-purple-300 text-purple-900 px-3 py-1 rounded-full text-xs font-medium shadow">{mood}</span>
+                  <span key={mood+idx} className="bg-[#6B4EFF]/30 text-[#D1D5DB] px-2 py-1 rounded-full text-xs font-medium">{mood}</span>
                 ))}
               </div>
             )}
@@ -74,7 +62,7 @@ export default function SessionsPage() {
         ))}
       </div>
       {sessions.length === 0 && (
-        <div className="text-purple-900 text-lg mt-12 text-center">No sessions found.</div>
+        <div className="text-[#D1D5DB] text-lg mt-12 text-center">No sessions found.</div>
       )}
     </div>
   );

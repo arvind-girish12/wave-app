@@ -8,10 +8,6 @@ const navSections = [
     items: [
       { icon: <FaHome />, label: 'Home', href: '/' },
       { icon: <FaComments />, label: 'Sessions', href: '/sessions' },
-      { icon: <FaBook />, label: 'Journal', href: '/journal' },
-      { icon: <FaBrain />, label: 'Exercises', href: '/exercises' },
-      { icon: <FaCalendarAlt />, label: 'Mood Tracker', href: '/mood' },
-      { icon: <FaSeedling />, label: 'Progress', href: '/progress' },
     ],
   },
   {
@@ -34,18 +30,18 @@ const navSections = [
 
 export default function DashboardSidebar({ onLogout }) {
   return (
-    <aside className="fixed top-0 left-0 h-screen w-64 bg-gradient-to-br from-white via-purple-100 to-purple-200 border-r-2 border-purple-300 flex flex-col justify-between py-6 px-4 shadow-2xl shadow-purple-300/70 z-30">
+    <aside className="fixed top-0 left-0 h-screen w-64 bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF] border-r-2 border-[#6B4EFF] flex flex-col justify-between py-6 px-4 shadow-2xl shadow-[#6B4EFF]/70 z-30">
       <div>
-        <div className="mb-8 text-2xl font-bold text-purple-900 tracking-tight drop-shadow-lg">wave</div>
+        <div className="mb-8 text-2xl font-bold text-white tracking-tight drop-shadow-lg">wave</div>
         {navSections.map(section => (
           <div key={section.title} className="mb-6">
-            <div className="uppercase text-xs text-purple-400 font-semibold mb-2 pl-2 tracking-wider">{section.title}</div>
+            <div className="uppercase text-xs text-[#D1D5DB] font-semibold mb-2 pl-2 tracking-wider">{section.title}</div>
             <ul className="space-y-1">
               {section.items.map(item => (
                 <li key={item.label}>
                   <a
                     href={item.href}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-purple-900 hover:bg-gradient-to-r hover:from-purple-400 hover:to-purple-600 hover:shadow-lg transition-all font-medium ${item.isLogout ? 'text-red-600 hover:bg-red-50' : ''}`}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-white hover:bg-gradient-to-r hover:from-[#2B176B] hover:to-[#3B2BFF] hover:shadow-lg transition-all font-medium ${item.isLogout ? 'text-red-400 hover:bg-red-900/30' : ''}`}
                     onClick={item.isLogout ? (e) => { e.preventDefault(); onLogout && onLogout(); } : undefined}
                   >
                     <span className="text-lg drop-shadow-sm">{item.icon}</span>
@@ -57,7 +53,7 @@ export default function DashboardSidebar({ onLogout }) {
           </div>
         ))}
       </div>
-      <div className="text-xs text-purple-500 text-center opacity-60">&copy; {new Date().getFullYear()} Wave</div>
+      <div className="text-xs text-[#D1D5DB] text-center opacity-60">&copy; {new Date().getFullYear()} Wave</div>
     </aside>
   );
 } 

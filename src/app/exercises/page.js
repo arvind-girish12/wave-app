@@ -73,22 +73,22 @@ export default function ExercisesPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-wave-offwhite p-8">
+      <div className="min-h-screen bg-gradient-to-br from-[#f3e8ff] via-[#f5eafe] to-[#eaf6ff] p-8">
         <div className="max-w-6xl mx-auto">
           <div className="flex justify-between items-center mb-8">
-            <div className="h-8 w-48 bg-gray-200 rounded animate-pulse"></div>
+            <div className="h-8 w-48 bg-white/50 rounded animate-pulse"></div>
           </div>
           <div className="flex gap-4 mb-8">
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="h-10 w-24 bg-gray-200 rounded animate-pulse"></div>
+              <div key={i} className="h-10 w-24 bg-white/50 rounded animate-pulse"></div>
             ))}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map((i) => (
-              <div key={i} className="bg-white rounded-xl p-6 shadow-sm">
-                <div className="h-6 w-3/4 bg-gray-200 rounded animate-pulse mb-4"></div>
-                <div className="h-4 w-full bg-gray-200 rounded animate-pulse mb-4"></div>
-                <div className="h-8 w-24 bg-gray-200 rounded animate-pulse"></div>
+              <div key={i} className="bg-white/50 rounded-xl p-6 shadow-sm">
+                <div className="h-6 w-3/4 bg-white/70 rounded animate-pulse mb-4"></div>
+                <div className="h-4 w-full bg-white/70 rounded animate-pulse mb-4"></div>
+                <div className="h-8 w-24 bg-white/70 rounded animate-pulse"></div>
               </div>
             ))}
           </div>
