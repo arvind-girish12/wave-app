@@ -168,94 +168,45 @@ export default function HelpPage() {
             <h2 className="text-2xl font-bold text-white mb-6">Emergency Resources</h2>
             <div className="space-y-6">
               {EMERGENCY_RESOURCES.map((region) => (
-    <div className="min-h-screen bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF] ml-64 p-8">
-      <div className="max-w-4xl mx-auto space-y-8">
-        {/* How Wave Works Section */}
-        <section>
-          <h2 className="text-2xl font-bold text-white mb-6">How Wave Works</h2>
-          <div className="space-y-4 mb-8">
-            <p className="text-[#D1D5DB]">
-              Wave uses AI to assist with emotional reflection. It's not a therapist or a substitute for one.
-            </p>
-            <p className="text-[#D1D5DB]">
-              Conversations are private and encrypted.
-            </p>
-            <p className="text-[#D1D5DB]">
-              The AI learns your preferences (tone, topic) but cannot diagnose or treat.
-            </p>
-          </div>
-          <div className="bg-[#1a1333]/80 rounded-xl p-6 shadow-sm">
-            <h3 className="font-medium text-white mb-4">Frequently Asked Questions</h3>
-            <div className="space-y-2">
-              {FAQs.map((faq, index) => (
-                <AccordionItem
-                  key={index}
-                  question={faq.question}
-                  answer={faq.answer}
-                  isOpen={openFaq === index}
-                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                />
+                <div key={region.region} className="bg-[#1a1333]/80 rounded-xl p-6 shadow-sm">
+                  <h3 className="font-medium text-white mb-4">{region.region}</h3>
+                  <div className="space-y-4">
+                    {region.resources.map((resource, index) => (
+                      <div key={index} className="border-l-4 border-[#6B4EFF] pl-4">
+                        <h4 className="font-medium text-white">{resource.name}</h4>
+                        {resource.number && (
+                          <p className="text-[#D1D5DB] flex items-center gap-2">
+                            <FaPhone className="text-[#D1D5DB]" />
+                            {resource.number}
+                          </p>
+                        )}
+                        {resource.website && (
+                          <p className="text-[#D1D5DB]">
+                            Website: {resource.website}
+                          </p>
+                        )}
+                        <p className="text-sm text-[#D1D5DB] mt-1">{resource.description}</p>
+                        {resource.hours && (
+                          <p className="text-sm text-[#D1D5DB]">Available: {resource.hours}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
-          </div>
-        </section>
+          </section>
+        </div>
 
-        {/* Privacy & Data Section */}
-        <section>
-          <h2 className="text-2xl font-bold text-white mb-6">Privacy & Data</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <HelpCard icon={FaShieldAlt} title="Data Protection">
-              <p>We do not sell your data. Your conversations are stored securely on encrypted servers.</p>
-            </HelpCard>
-            <HelpCard icon={FaRobot} title="AI & Privacy">
-              <p>The AI learns from your interactions to provide better support, but your data remains private and secure.</p>
-            </HelpCard>
-          </div>
-        </section>
-
-        {/* Emergency Resources Section */}
-        <section id="emergency-resources">
-          <h2 className="text-2xl font-bold text-white mb-6">Emergency Resources</h2>
-          <div className="space-y-6">
-            {EMERGENCY_RESOURCES.map((region) => (
-              <div key={region.region} className="bg-[#1a1333]/80 rounded-xl p-6 shadow-sm">
-                <h3 className="font-medium text-white mb-4">{region.region}</h3>
-                <div className="space-y-4">
-                  {region.resources.map((resource, index) => (
-                    <div key={index} className="border-l-4 border-[#6B4EFF] pl-4">
-                      <h4 className="font-medium text-white">{resource.name}</h4>
-                      {resource.number && (
-                        <p className="text-[#D1D5DB] flex items-center gap-2">
-                          <FaPhone className="text-[#D1D5DB]" />
-                          {resource.number}
-                        </p>
-                      )}
-                      {resource.website && (
-                        <p className="text-[#D1D5DB]">
-                          Website: {resource.website}
-                        </p>
-                      )}
-                      <p className="text-sm text-[#D1D5DB] mt-1">{resource.description}</p>
-                      {resource.hours && (
-                        <p className="text-sm text-[#D1D5DB]">Available: {resource.hours}</p>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-      </div>
-
-      {/* Floating Emergency Button */}
-      <button
-        onClick={scrollToEmergency}
-        className="fixed bottom-8 right-8 bg-red-500 text-white px-6 py-3 rounded-full shadow-lg hover:bg-red-600 transition-colors flex items-center gap-2"
-      >
-        <FaExclamationTriangle />
-        In Crisis?
-      </button>
+        {/* Floating Emergency Button */}
+        <button
+          onClick={scrollToEmergency}
+          className="fixed bottom-8 right-8 bg-red-500 text-white px-6 py-3 rounded-full shadow-lg hover:bg-red-600 transition-colors flex items-center gap-2"
+        >
+          <FaExclamationTriangle />
+          In Crisis?
+        </button>
+      </main>
     </div>
   );
 } 
