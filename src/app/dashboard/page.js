@@ -456,10 +456,13 @@ export default function Dashboard() {
         {showOnboarding && <OnboardingModal onClose={handleCloseOnboarding} />}
         {showWaitlist && <WaitlistModal onClose={() => setShowWaitlist(false)} />}
       </div>
-      <div className="w-full text-center text-xs text-white py-4 bg-[#2B176B] ml-64 pr-4 max-w-[calc(100vw-16rem)]">
-        If you or someone you know is experiencing thoughts of self-harm, suicide, or any other life-threatening situation, contact a helpline or go to the nearest hospital or emergency room.
-        <br />
-        For emergency mental health support in India, call the national Tele MANAS helpline at 1-800-891-4416.
+      <div className="w-full text-center text-xs text-white py-4 bg-[#2B176B] ml-64 pr-4 max-w-[calc(100vw-16rem)] ml-0 max-w-full px-2">
+        <span className="hidden md:inline">
+          If you or someone you know is experiencing thoughts of self-harm, suicide, or any other life-threatening situation, contact a helpline or go to the nearest hospital or emergency room.<br />For emergency mental health support in India, call the national Tele MANAS helpline at 1-800-891-4416.
+        </span>
+        <span className="md:hidden">
+          Wave is not a suicide helpline or therapy service. If you need urgent help, contact a helpline or go to the nearest hospital.
+        </span>
       </div>
     </div>
   );
