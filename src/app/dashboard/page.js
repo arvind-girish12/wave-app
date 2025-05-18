@@ -7,6 +7,7 @@ import OnboardingModal from "../../components/OnboardingModal";
 import WaitlistModal from "../../components/WaitlistModal";
 import DashboardSidebar from "../../components/DashboardSidebar";
 import { CheckCircleIcon, CloudIcon, SunIcon, MoonIcon, SparklesIcon } from '@heroicons/react/24/solid';
+import { FaBars } from 'react-icons/fa';
 
 const TOUGH_TONGUE_API_TOKEN = 'n5wfYV9ffqSzULGKGaS5X-7XuUf2Svimj46P1Zlbbx4';
 const SCENARIO_ID = '681df5ff4e0a1c83aae411ec';
@@ -25,6 +26,7 @@ export default function Dashboard() {
   const [transcript, setTranscript] = useState("");
   const [analysis, setAnalysis] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -198,8 +200,17 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen flex ml-64" style={{ background: 'linear-gradient(135deg, #0A0613 0%, #2B176B 40%, #3B2BFF 70%, #F7BFA3 100%)' }}>
-      <main className="flex-1 flex flex-col items-center justify-center p-8">
+    <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF]">
+      {/* Hamburger for mobile */}
+      <button
+        className="md:hidden fixed top-4 left-4 z-50 bg-[#2B176B] p-2 rounded-full shadow-lg border border-[#6B4EFF] text-white"
+        onClick={() => setSidebarOpen(true)}
+        aria-label="Open sidebar"
+      >
+        <FaBars className="w-6 h-6" />
+      </button>
+      <DashboardSidebar onLogout={handleSignOut} mobileOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 w-full md:ml-64 transition-all duration-300">
         {loading ? (
           <div className="flex justify-center items-center h-screen bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF] ml-64">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#6B4EFF] shadow-lg"></div>

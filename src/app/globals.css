@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -56,4 +57,42 @@ body {
   font-size: 1.2rem;
   font-weight: 200;
   /* font-weight: 600; */
+}
+
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-100%);
+    opacity: 0.5;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+.animate-slide-in-left {
+  animation: slide-in-left 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+.lato-onboarding {
+  font-family: 'Lato', Arial, Helvetica, sans-serif !important;
+}
+.lato-onboarding h2 {
+  font-size: 2.25rem !important;
+}
+.lato-onboarding p, .lato-onboarding button {
+  font-size: 1.25rem !important;
+}
+
+@media (max-width: 640px) {
+  .onboarding-modal-card {
+    max-width: 100% !important;
+    border-radius: 1rem !important;
+    padding: 1.25rem !important;
+  }
+  .lato-onboarding h2 {
+    font-size: 1.2rem !important;
+  }
+  .lato-onboarding p, .lato-onboarding button {
+    font-size: 0.95rem !important;
+  }
 }

@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { FaHeart, FaDumbbell, FaBalanceScale } from "react-icons/fa";
+import { FaHeart, FaDumbbell, FaBalanceScale, FaBars } from "react-icons/fa";
+import DashboardSidebar from '../../components/DashboardSidebar';
 
 const TONE_OPTIONS = [
   {
@@ -34,6 +35,7 @@ export default function LanguagePage() {
   });
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchPreferences();
@@ -79,89 +81,100 @@ export default function LanguagePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF] ml-64 p-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-3xl mx-auto"
+    <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF]">
+      {/* Hamburger for mobile */}
+      <button
+        className="md:hidden fixed top-4 left-4 z-50 bg-[#2B176B] p-2 rounded-full shadow-lg border border-[#6B4EFF] text-white"
+        onClick={() => setSidebarOpen(true)}
+        aria-label="Open sidebar"
       >
-        <div className="bg-[#1a1333]/80 rounded-xl p-8 shadow-sm">
-          <h1 className="text-2xl font-bold text-white mb-2">Language & Tone</h1>
-          <p className="text-[#D1D5DB] mb-8">
-            Customize how the AI communicates with you during your sessions.
-          </p>
+        <FaBars className="w-6 h-6" />
+      </button>
+      <DashboardSidebar mobileOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <main className="flex-1 p-4 md:p-8 w-full md:ml-64 transition-all duration-300">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-3xl mx-auto"
+        >
+          <div className="bg-[#1a1333]/80 rounded-xl p-4 md:p-8 shadow-sm">
+            <h1 className="text-2xl font-bold text-white mb-2">Language & Tone</h1>
+            <p className="text-[#D1D5DB] mb-8">
+              Customize how the AI communicates with you during your sessions.
+            </p>
 
-          <form onSubmit={handleSave} className="space-y-8">
-            <div>
-              <label className="block text-sm font-medium text-[#D1D5DB] mb-4">
-                Select Your Preferred Tone
-              </label>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {TONE_OPTIONS.map((opt) => {
-                  const Icon = opt.icon;
-                  return (
-                    <label
-                      key={opt.value}
-                      className={`relative flex flex-col p-6 rounded-xl border-2 cursor-pointer transition-all ${
-                        preferences.preferred_tone === opt.value
-                          ? 'border-[#6B4EFF] bg-[#6B4EFF]/5 shadow-md'
-                          : 'border-gray-200 hover:border-[#6B4EFF]/50 hover:shadow-sm'
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="preferred_tone"
-                        value={opt.value}
-                        checked={preferences.preferred_tone === opt.value}
-                        onChange={() => handleToneChange(opt.value)}
-                        className="sr-only"
-                      />
-                      <div className="flex items-center gap-3 mb-3">
-                        <Icon className={`w-6 h-6 ${
+            <form onSubmit={handleSave} className="space-y-8">
+              <div>
+                <label className="block text-sm font-medium text-[#D1D5DB] mb-4">
+                  Select Your Preferred Tone
+                </label>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {TONE_OPTIONS.map((opt) => {
+                    const Icon = opt.icon;
+                    return (
+                      <label
+                        key={opt.value}
+                        className={`relative flex flex-col p-6 rounded-xl border-2 cursor-pointer transition-all ${
                           preferences.preferred_tone === opt.value
-                            ? 'text-[#6B4EFF]'
-                            : 'text-[#D1D5DB]'
-                        }`} />
-                        <span className="font-medium text-white">{opt.label}</span>
-                      </div>
-                      <p className="text-sm text-[#D1D5DB] mb-4">{opt.description}</p>
-                      <div className="mt-auto">
-                        <p className="text-sm text-[#D1D5DB] italic">
-                          "{opt.preview}"
-                        </p>
-                      </div>
-                    </label>
-                  );
-                })}
+                            ? 'border-[#6B4EFF] bg-[#6B4EFF]/5 shadow-md'
+                            : 'border-gray-200 hover:border-[#6B4EFF]/50 hover:shadow-sm'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="preferred_tone"
+                          value={opt.value}
+                          checked={preferences.preferred_tone === opt.value}
+                          onChange={() => handleToneChange(opt.value)}
+                          className="sr-only"
+                        />
+                        <div className="flex items-center gap-3 mb-3">
+                          <Icon className={`w-6 h-6 ${
+                            preferences.preferred_tone === opt.value
+                              ? 'text-[#6B4EFF]'
+                              : 'text-[#D1D5DB]'
+                          }`} />
+                          <span className="font-medium text-white">{opt.label}</span>
+                        </div>
+                        <p className="text-sm text-[#D1D5DB] mb-4">{opt.description}</p>
+                        <div className="mt-auto">
+                          <p className="text-sm text-[#D1D5DB] italic">
+                            "{opt.preview}"
+                          </p>
+                        </div>
+                      </label>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
 
-            <div className="flex justify-end">
-              <button
-                type="submit"
-                disabled={saving}
-                className="bg-wave-forest text-white py-2 px-6 rounded-lg hover:bg-wave-forest/90 transition-colors disabled:opacity-50 flex items-center gap-2"
-              >
-                {saving ? (
-                  <>
-                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Saving...
-                  </>
-                ) : saveSuccess ? (
-                  <>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Saved!
-                  </>
-                ) : (
-                  'Save Preferences'
-                )}
-              </button>
-            </div>
-          </form>
-        </div>
-      </motion.div>
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="bg-wave-forest text-white py-2 px-6 rounded-lg hover:bg-wave-forest/90 transition-colors disabled:opacity-50 flex items-center gap-2"
+                >
+                  {saving ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Saving...
+                    </>
+                  ) : saveSuccess ? (
+                    <>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      Saved!
+                    </>
+                  ) : (
+                    'Save Preferences'
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        </motion.div>
+      </main>
     </div>
   );
 } 

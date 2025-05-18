@@ -5,10 +5,10 @@ import { useState } from 'react';
 export default function OnboardingModal({ onClose }) {
   return (
     <div className="fixed inset-0 bg-gradient-to-br from-[#0A0613]/90 via-[#2B176B]/90 to-[#3B2BFF]/90 flex items-center justify-center z-50">
-      <div className="relative max-w-4xl w-full p-0 mx-4 flex flex-col items-center rounded-2xl border-2 border-[#6B4EFF] shadow-2xl overflow-hidden">
+      <div className="onboarding-modal-card relative max-w-4xl w-full p-0 mx-4 flex flex-col items-center rounded-2xl border-2 border-[#6B4EFF] shadow-2xl overflow-hidden">
         <div className="absolute inset-0 z-0" style={{ background: 'url(/onboarding-background.jpeg) center center / cover no-repeat' }} />
         <div className="absolute inset-0 z-10 bg-[#1a1333]/20" />
-        <div className="relative z-20 w-full p-10 flex flex-col items-center reenie-text">
+        <div className="relative z-20 w-full p-10 flex flex-col items-center lato-onboarding">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 text-[#D1D5DB] hover:text-white text-2xl font-bold focus:outline-none"

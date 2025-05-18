@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { FaChevronDown, FaChevronUp, FaPhone, FaShieldAlt, FaRobot, FaExclamationTriangle } from "react-icons/fa";
+import { FaChevronDown, FaChevronUp, FaPhone, FaShieldAlt, FaRobot, FaExclamationTriangle, FaBars } from "react-icons/fa";
+import DashboardSidebar from '../../components/DashboardSidebar';
 
 const FAQs = [
   {
@@ -100,12 +101,73 @@ function HelpCard({ icon: Icon, title, children }) {
 
 export default function HelpPage() {
   const [openFaq, setOpenFaq] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const scrollToEmergency = () => {
     document.getElementById('emergency-resources')?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
+    <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF]">
+      {/* Hamburger for mobile */}
+      <button
+        className="md:hidden fixed top-4 left-4 z-50 bg-[#2B176B] p-2 rounded-full shadow-lg border border-[#6B4EFF] text-white"
+        onClick={() => setSidebarOpen(true)}
+        aria-label="Open sidebar"
+      >
+        <FaBars className="w-6 h-6" />
+      </button>
+      <DashboardSidebar mobileOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <main className="flex-1 p-4 md:p-8 w-full md:ml-64 transition-all duration-300">
+        <div className="max-w-4xl mx-auto space-y-8">
+          {/* How Wave Works Section */}
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-6">How Wave Works</h2>
+            <div className="space-y-4 mb-8">
+              <p className="text-[#D1D5DB]">
+                Wave uses AI to assist with emotional reflection. It's not a therapist or a substitute for one.
+              </p>
+              <p className="text-[#D1D5DB]">
+                Conversations are private and encrypted.
+              </p>
+              <p className="text-[#D1D5DB]">
+                The AI learns your preferences (tone, topic) but cannot diagnose or treat.
+              </p>
+            </div>
+            <div className="bg-[#1a1333]/80 rounded-xl p-6 shadow-sm">
+              <h3 className="font-medium text-white mb-4">Frequently Asked Questions</h3>
+              <div className="space-y-2">
+                {FAQs.map((faq, index) => (
+                  <AccordionItem
+                    key={index}
+                    question={faq.question}
+                    answer={faq.answer}
+                    isOpen={openFaq === index}
+                    onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Privacy & Data Section */}
+          <section>
+            <h2 className="text-2xl font-bold text-white mb-6">Privacy & Data</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <HelpCard icon={FaShieldAlt} title="Data Protection">
+                <p>We do not sell your data. Your conversations are stored securely on encrypted servers.</p>
+              </HelpCard>
+              <HelpCard icon={FaRobot} title="AI & Privacy">
+                <p>The AI learns from your interactions to provide better support, but your data remains private and secure.</p>
+              </HelpCard>
+            </div>
+          </section>
+
+          {/* Emergency Resources Section */}
+          <section id="emergency-resources">
+            <h2 className="text-2xl font-bold text-white mb-6">Emergency Resources</h2>
+            <div className="space-y-6">
+              {EMERGENCY_RESOURCES.map((region) => (
     <div className="min-h-screen bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF] ml-64 p-8">
       <div className="max-w-4xl mx-auto space-y-8">
         {/* How Wave Works Section */}
