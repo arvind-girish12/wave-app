@@ -19,10 +19,18 @@ export default function OnboardingModal({ onClose }) {
           <div className="flex flex-col items-start text-left w-full">
             <h2 className="text-2xl font-bold mb-4 text-white drop-shadow">Welcome to Wave</h2>
             <p className="mb-6 text-[#D1D5DB] leading-relaxed">
-              In the summer of 2020, I woke up one morning with a heavy feeling in my chest. I thought it would go away, but it stayed for days. I tried talking to people, but no one really got it. And when I really needed someone to just listen, I couldn't find that space.<br /><br />
-              That's why Wave exists.<br /><br />
-              It's here for you in those hard moments. When you feel overwhelmed, anxious, or just need someone to talk to, Wave is your companion in that exact moment for that moment. No judgment. No pressure. Just care, comfort, and someone who truly listens. Available when you need it.<br /><br />
-              You're not alone. We're here.
+              <span className="hidden md:inline">
+                In the summer of 2020, I woke up one morning with a heavy feeling in my chest. I thought it would go away, but it stayed for days. I tried talking to people, but no one really got it. And when I really needed someone to just listen, I couldn't find that space.<br /><br />
+                That's why Wave exists.<br /><br />
+                It's here for you in those hard moments. When you feel overwhelmed, anxious, or just need someone to talk to, Wave is your companion in that exact moment for that moment. No judgment. No pressure. Just care, comfort, and someone who truly listens. Available when you need it.<br /><br />
+                Your conversations are private and encrypted - Wave can't read them, and they're yours alone. We believe in creating a safe space where you can be completely yourself.<br /><br />
+                You're not alone. We're here for you.
+              </span>
+              <span className="md:hidden">
+                We designed Wave for you so that in the moments you feel anxious, overwhelmed, or alone - you have someone to turn to. We built a gentle companion who listens without judgment or pressure. Just calm, care, and the feeling of being truly heard.<br /><br />
+                Your conversations are private and encrypted - Wave can't read them, and they're yours alone. We believe in creating a safe space where you can be completely yourself.<br /><br />
+                Right when you need it most. In your hardest moments, you don't have to be alone anymore.
+              </span>
             </p>
             <div className="italic mb-1 text-[#D1D5DB]">With love,</div>
             <div className="font-medium text-lg mb-8 text-white">Aastha & Team</div>

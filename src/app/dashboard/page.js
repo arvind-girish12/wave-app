@@ -12,6 +12,22 @@ import { FaBars } from 'react-icons/fa';
 const TOUGH_TONGUE_API_TOKEN = 'n5wfYV9ffqSzULGKGaS5X-7XuUf2Svimj46P1Zlbbx4';
 const SCENARIO_ID = '681df5ff4e0a1c83aae411ec';
 
+function MicroNudge({ visible, onHide }) {
+  useEffect(() => {
+    if (!visible) return;
+    const timeout = setTimeout(onHide, 8000);
+    return () => clearTimeout(timeout);
+  }, [visible, onHide]);
+  if (!visible) return null;
+  return (
+    <div style={{ position: 'fixed', left: 0, right: 0, bottom: '4.5rem', zIndex: 60, pointerEvents: 'none' }} className="flex justify-center">
+      <div className="bg-[#6B4EFF] text-white px-6 py-3 rounded-2xl shadow-xl flex items-center gap-3 animate-fade-in pointer-events-auto">
+        <span className="font-medium">Ready to begin? Click the <b>Start</b> button below to begin your first session! <span className='ml-2 text-2xl' role='img' aria-label='upward finger'>☝️</span></span>
+      </div>
+    </div>
+  );
+}
+
 export default function Dashboard() {
   const router = useRouter();
   const [user, setUser] = useState(null);
@@ -27,6 +43,7 @@ export default function Dashboard() {
   const [analysis, setAnalysis] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showMicroNudge, setShowMicroNudge] = useState(false);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -128,6 +145,7 @@ export default function Dashboard() {
   const handleCloseOnboarding = () => {
     setShowOnboarding(false);
     localStorage.setItem('hasSeenOnboarding', 'true');
+    setTimeout(() => setShowMicroNudge(true), 400); // Show nudge after modal closes
   };
 
   const handleBeginSession = () => {
@@ -212,7 +230,7 @@ export default function Dashboard() {
       <DashboardSidebar onLogout={handleSignOut} mobileOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 w-full md:ml-64 transition-all duration-300">
         {loading ? (
-          <div className="flex justify-center items-center h-screen bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF] ml-64">
+          <div className="flex justify-center items-center h-screen bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF]">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#6B4EFF] shadow-lg"></div>
           </div>
         ) : analyzing ? (
@@ -400,17 +418,20 @@ export default function Dashboard() {
           </div>
         ) : (
           !showOnboarding && !showWaitlist && (
-            <div className="w-full max-w-4xl embedded-content flex justify-center">
-              <iframe
-                ref={iframeRef}
-                src="https://app.toughtongueai.com/embed/681df5ff4e0a1c83aae411ec?bg=%23170e32&skipPrecheck=true&buttonColor=%23d1c1d7"
-                width="100%"
-                height="700px"
-                frameBorder="0"
-                allow="microphone; camera; display-capture"
-                className="rounded-lg shadow-lg"
-              />
-            </div>
+            <>
+              <div className="w-full max-w-4xl embedded-content flex justify-center">
+                <iframe
+                  ref={iframeRef}
+                  src="https://app.toughtongueai.com/embed/681df5ff4e0a1c83aae411ec?bg=%23170e32&skipPrecheck=true&buttonColor=%23d1c1d7"
+                  width="100%"
+                  height="700px"
+                  frameBorder="0"
+                  allow="microphone; camera; display-capture"
+                  className="rounded-lg shadow-lg"
+                />
+              </div>
+              <MicroNudge visible={showMicroNudge} onHide={() => setShowMicroNudge(false)} />
+            </>
           )
         )}
       </main>
