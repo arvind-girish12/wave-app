@@ -15,7 +15,6 @@ const TONE_OPTIONS = [
 export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
   const [stats, setStats] = useState(null);
-  const [topics, setTopics] = useState([]);
   const [editing, setEditing] = useState(false);
   const [preferences, setPreferences] = useState({ preferred_tone: "gentle", preferred_agent: "", allow_agent_suggestions: true });
   const [saving, setSaving] = useState(false);
@@ -23,12 +22,22 @@ export default function ProfilePage() {
 
   useEffect(() => {
     fetchProfile();
-    fetchTopics();
   }, []);
 
   const fetchProfile = async () => {
     const res = await fetch("/api/profile");
     const data = await res.json();
+    if (!data.profile) {
+      // No profile found, set safe defaults
+      setProfile({});
+      setStats({});
+      setPreferences({
+        preferred_tone: "gentle",
+        preferred_agent: "",
+        allow_agent_suggestions: true,
+      });
+      return;
+    }
     setProfile(data.profile);
     setStats(data.stats);
     setPreferences({
@@ -36,12 +45,6 @@ export default function ProfilePage() {
       preferred_agent: data.profile.preferred_agent || "",
       allow_agent_suggestions: data.profile.allow_agent_suggestions !== false,
     });
-  };
-
-  const fetchTopics = async () => {
-    const res = await fetch("/api/profile/topics");
-    const data = await res.json();
-    setTopics(data.topics || []);
   };
 
   const handlePrefChange = (e) => {
@@ -75,6 +78,14 @@ export default function ProfilePage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF]">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#6B4EFF] shadow-lg"></div>
+      </div>
+    );
+  }
+
+  if (profile && Object.keys(profile).length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF]">
+        No profile found. Please set up your profile in settings.
       </div>
     );
   }
@@ -118,20 +129,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Topics Explored */}
-          <div className="bg-[#1a1333]/80 rounded-xl p-6 shadow-sm">
-            <div className="flex items-center gap-2 mb-4">
-              <FaTags className="text-white" />
-              <h2 className="text-lg font-semibold text-white">Topics Explored</h2>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {topics.length === 0 && <span className="text-[#D1D5DB]">No topics yet</span>}
-              {topics.map((t) => (
-                <span key={t.topic} className="bg-[#6B4EFF]/20 text-white px-3 py-1 rounded-full text-sm font-medium">
-                  {t.topic} <span className="text-xs text-[#D1D5DB]">({t.count})</span>
-                </span>
-              ))}
-            </div>
-          </div>
+          {/* Removed topics section */}
 
           {/* Agent Preferences */}
           <div className="bg-[#1a1333]/80 rounded-xl p-6 shadow-sm">

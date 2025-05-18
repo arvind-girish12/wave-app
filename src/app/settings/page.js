@@ -147,7 +147,6 @@ export default function SettingsPage() {
                 <div className="relative group">
                   <img
                     src={avatarPreview}
-                    alt="Profile"
                     className="w-24 h-24 rounded-full object-cover border-2 border-[#6B4EFF] transition-transform group-hover:scale-105"
                   />
                   <label

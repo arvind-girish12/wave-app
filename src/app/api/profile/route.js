@@ -17,6 +17,10 @@ export async function GET(request) {
       .select('*')
       .eq('user_id', userId)
       .single();
+    if (profileError && profileError.code === 'PGRST116') {
+      // No profile found, return empty response
+      return NextResponse.json({ profile: null, stats: null }, { status: 200 });
+    }
     if (profileError) throw profileError;
 
     // Get summary stats
@@ -62,27 +66,6 @@ export async function PUT(request) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error updating preferences:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
-  }
-}
-
-// GET /api/profile/topics → return list of most explored topics (by count)
-export async function GET_topics(request) {
-  try {
-    const supabase = createRouteHandlerClient({ cookies });
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    const userId = session.user.id;
-    const { data, error } = await supabase
-      .from('topic_stats')
-      .select('topic, count')
-      .eq('user_id', userId)
-      .order('count', { ascending: false })
-      .limit(10);
-    if (error) throw error;
-    return NextResponse.json({ topics: data });
-  } catch (error) {
-    console.error('Error fetching topics:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 } 

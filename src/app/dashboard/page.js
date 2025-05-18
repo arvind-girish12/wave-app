@@ -440,7 +440,7 @@ export default function Dashboard() {
                 <div className="w-full max-w-4xl embedded-content flex justify-center">
                   <iframe
                     ref={iframeRef}
-                    src="https://app.toughtongueai.com/embed/6829a3eb8864498a1f546d52?bg=%23170e32&hidePoweredBy=true&skipPrecheck=true&buttonColor=%23d4a4e5&powerUp=sam"
+                    src="https://app.toughtongueai.com/embed/6829a3eb8864498a1f546d52?bg=%23170e32&hidePoweredBy=true&skipPrecheck=true&buttonColor=%23d69ee6"
                     width="100%"
                     height="700px"
                     frameBorder="0"
@@ -461,7 +461,7 @@ export default function Dashboard() {
           If you or someone you know is experiencing thoughts of self-harm, suicide, or any other life-threatening situation, contact a helpline or go to the nearest hospital or emergency room.<br />For emergency mental health support in India, call the national Tele MANAS helpline at 1-800-891-4416.
         </span>
         <span className="md:hidden">
-          Wave is not a suicide helpline or therapy service. If you need urgent help, contact a helpline or go to the nearest hospital.
+          Wave AI is not a suicide helpline or therapy service. If you need urgent help, contact 1-800 891 4416 or go to the nearest hospital.
         </span>
       </div>
     </div>

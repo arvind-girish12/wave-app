@@ -44,7 +44,7 @@ export default function DashboardSidebar({ onLogout, mobileOpen, onClose }) {
                     <a
                       href={item.href}
                       className={`flex items-center gap-3 px-3 py-2 rounded-lg text-white hover:bg-gradient-to-r hover:from-[#2B176B] hover:to-[#3B2BFF] hover:shadow-lg transition-all font-medium ${item.isLogout ? 'text-red-400 hover:bg-red-900/30' : ''}`}
-                      onClick={item.isLogout ? (e) => { e.preventDefault(); onLogout && onLogout(); } : undefined}
+                      onClick={item.isLogout ? (e) => { e.preventDefault(); console.log('Logout clicked'); onLogout && onLogout(); } : undefined}
                     >
                       <span className="text-lg drop-shadow-sm">{item.icon}</span>
                       <span>{item.label}</span>

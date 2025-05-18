@@ -27,6 +27,14 @@ export async function GET(request) {
         .single()
     ]);
 
+    if (settingsResponse.error && settingsResponse.error.code === 'PGRST116') {
+      // No settings found, return empty response
+      return NextResponse.json({ settings: null, profile: profileResponse.data || null }, { status: 200 });
+    }
+    if (profileResponse.error && profileResponse.error.code === 'PGRST116') {
+      // No profile found, return empty response
+      return NextResponse.json({ settings: settingsResponse.data || null, profile: null }, { status: 200 });
+    }
     if (settingsResponse.error) throw settingsResponse.error;
     if (profileResponse.error) throw profileResponse.error;
 
