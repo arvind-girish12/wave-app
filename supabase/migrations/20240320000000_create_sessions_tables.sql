@@ -15,6 +15,7 @@ CREATE TABLE sessions (
     recommendations JSONB,
     insight_tags TEXT[],
     follow_up_suggestions TEXT[],
+    session_duration INTEGER,
     session_id TEXT UNIQUE
 );
 
