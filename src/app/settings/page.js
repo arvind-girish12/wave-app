@@ -27,7 +27,7 @@ export default function SettingsPage() {
       const data = await response.json();
       setSettings(data.settings);
       setProfile(data.profile);
-      setAvatarPreview(data.profile.avatar_url);
+      setAvatarPreview(data?.profile?.avatar_url);
     } catch (error) {
       console.error('Error fetching settings:', error);
     } finally {
@@ -181,7 +181,7 @@ export default function SettingsPage() {
                   type="text"
                   id="display_name"
                   name="display_name"
-                  defaultValue={profile.display_name}
+                  defaultValue={profile?.display_name}
                   placeholder="Display Name"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#6B4EFF] focus:ring-[#6B4EFF] transition-colors text-black placeholder:text-gray-400 text-sm px-3 py-2"
                   required
@@ -197,7 +197,7 @@ export default function SettingsPage() {
                   type="text"
                   id="pronouns"
                   name="pronouns"
-                  defaultValue={profile.pronouns}
+                  defaultValue={profile?.pronouns}
                   placeholder="e.g., he/him, she/her, they/them"
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#6B4EFF] focus:ring-[#6B4EFF] transition-colors text-black placeholder:text-gray-400 text-sm px-3 py-2"
                 />
@@ -249,14 +249,14 @@ export default function SettingsPage() {
                   </div>
                   <Switch
                     name="notify_mood_reminder"
-                    defaultChecked={settings.notify_mood_reminder}
+                    defaultChecked={settings?.notify_mood_reminder}
                     className={`${
-                      settings.notify_mood_reminder ? 'bg-[#6B4EFF]' : 'bg-gray-200'
+                      settings?.notify_mood_reminder ? 'bg-[#6B4EFF]' : 'bg-gray-200'
                     } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
                   >
                     <span
                       className={`${
-                        settings.notify_mood_reminder ? 'translate-x-6' : 'translate-x-1'
+                        settings?.notify_mood_reminder ? 'translate-x-6' : 'translate-x-1'
                       } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
                     />
                   </Switch>
@@ -271,14 +271,14 @@ export default function SettingsPage() {
                   </div>
                   <Switch
                     name="notify_progress_summary"
-                    defaultChecked={settings.notify_progress_summary}
+                    defaultChecked={settings?.notify_progress_summary}
                     className={`${
-                      settings.notify_progress_summary ? 'bg-[#6B4EFF]' : 'bg-gray-200'
+                      settings?.notify_progress_summary ? 'bg-[#6B4EFF]' : 'bg-gray-200'
                     } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
                   >
                     <span
                       className={`${
-                        settings.notify_progress_summary ? 'translate-x-6' : 'translate-x-1'
+                        settings?.notify_progress_summary ? 'translate-x-6' : 'translate-x-1'
                       } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
                     />
                   </Switch>
@@ -293,14 +293,14 @@ export default function SettingsPage() {
                   </div>
                   <Switch
                     name="notify_journal_nudge"
-                    defaultChecked={settings.notify_journal_nudge}
+                    defaultChecked={settings?.notify_journal_nudge}
                     className={`${
-                      settings.notify_journal_nudge ? 'bg-[#6B4EFF]' : 'bg-gray-200'
+                      settings?.notify_journal_nudge ? 'bg-[#6B4EFF]' : 'bg-gray-200'
                     } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
                   >
                     <span
                       className={`${
-                        settings.notify_journal_nudge ? 'translate-x-6' : 'translate-x-1'
+                        settings?.notify_journal_nudge ? 'translate-x-6' : 'translate-x-1'
                       } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
                     />
                   </Switch>
@@ -315,14 +315,14 @@ export default function SettingsPage() {
                   </div>
                   <Switch
                     name="notify_exercise_streak"
-                    defaultChecked={settings.notify_exercise_streak}
+                    defaultChecked={settings?.notify_exercise_streak}
                     className={`${
-                      settings.notify_exercise_streak ? 'bg-[#6B4EFF]' : 'bg-gray-200'
+                      settings?.notify_exercise_streak ? 'bg-[#6B4EFF]' : 'bg-gray-200'
                     } relative inline-flex h-6 w-11 items-center rounded-full transition-colors`}
                   >
                     <span
                       className={`${
-                        settings.notify_exercise_streak ? 'translate-x-6' : 'translate-x-1'
+                        settings?.notify_exercise_streak ? 'translate-x-6' : 'translate-x-1'
                       } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
                     />
                   </Switch>
