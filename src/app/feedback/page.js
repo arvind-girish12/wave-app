@@ -99,13 +99,13 @@ export default function FeedbackPage() {
                   What would you like to share?
                 </label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {FEEDBACK_TYPES.map((option) => {
-                    const Icon = option.icon;
+                  {FEEDBACK_TYPES?.map((option) => {
+                    const Icon = option?.icon;
                     return (
                       <label
-                        key={option.value}
+                        key={option?.value}
                         className={`relative flex flex-col p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                          type === option.value
+                          type === option?.value
                             ? 'border-[#6B4EFF] bg-[#6B4EFF]/5 shadow-md'
                             : 'border-gray-200 hover:border-[#6B4EFF]/50 hover:shadow-sm'
                         }`}
@@ -113,20 +113,20 @@ export default function FeedbackPage() {
                         <input
                           type="radio"
                           name="type"
-                          value={option.value}
-                          checked={type === option.value}
+                          value={option?.value}
+                          checked={type === option?.value}
                           onChange={(e) => setType(e.target.value)}
                           className="sr-only"
                         />
                         <div className="flex items-center gap-3 mb-2">
                           <Icon className={`w-5 h-5 ${
-                            type === option.value
+                            type === option?.value
                               ? 'text-[#6B4EFF]'
                               : 'text-gray-400'
                           }`} />
-                          <span className="font-medium text-white">{option.label}</span>
+                          <span className="font-medium text-white">{option?.label}</span>
                         </div>
-                        <p className="text-sm text-white/70">{option.description}</p>
+                        <p className="text-sm text-white/70">{option?.description}</p>
                       </label>
                     );
                   })}

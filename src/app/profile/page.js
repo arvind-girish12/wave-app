@@ -94,24 +94,24 @@ export default function ProfilePage() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl mx-auto space-y-8">
           {/* Profile Overview */}
           <div className="bg-[#1a1333]/80 rounded-xl p-6 shadow-sm flex flex-col items-center">
-            <img src={profile.avatar_url} alt="Avatar" className="w-24 h-24 rounded-full object-cover border-2 border-[#6B4EFF] mb-4" />
-            <h1 className="text-2xl font-bold text-white mb-1">{profile.display_name}</h1>
-            <div className="text-[#D1D5DB] mb-2">Joined on: {new Date(profile.created_at).toLocaleDateString()}</div>
+            <img src={profile?.avatar_url || ''} alt="Avatar" className="w-24 h-24 rounded-full object-cover border-2 border-[#6B4EFF] mb-4" style={{ background: !profile?.avatar_url ? '#2B176B' : undefined }} />
+            <h1 className="text-2xl font-bold text-white mb-1">{profile?.display_name || ''}</h1>
+            <div className="text-[#D1D5DB] mb-2">Joined on: {profile?.created_at ? new Date(profile.created_at).toLocaleDateString() : ''}</div>
             <div className="flex gap-6 mt-4">
               <div className="flex flex-col items-center">
-                <span className="text-lg font-semibold text-white">{stats.sessions}</span>
+                <span className="text-lg font-semibold text-white">{stats?.sessions ?? '-'}</span>
                 <span className="text-xs text-[#D1D5DB]">Sessions</span>
               </div>
               <div className="flex flex-col items-center">
-                <span className="text-lg font-semibold text-white">{stats.journal_entries}</span>
+                <span className="text-lg font-semibold text-white">{stats?.journal_entries ?? '-'}</span>
                 <span className="text-xs text-[#D1D5DB]">Journal Entries</span>
               </div>
               <div className="flex flex-col items-center">
-                <span className="text-lg font-semibold text-white">{stats.exercises_completed}</span>
+                <span className="text-lg font-semibold text-white">{stats?.exercises_completed ?? '-'}</span>
                 <span className="text-xs text-[#D1D5DB]">Exercises</span>
               </div>
               <div className="flex flex-col items-center">
-                <span className="text-lg font-semibold text-white">{stats.avg_mood || '-'} </span>
+                <span className="text-lg font-semibold text-white">{stats?.avg_mood ?? '-'}</span>
                 <span className="text-xs text-[#D1D5DB]">Avg. Mood</span>
               </div>
             </div>
@@ -165,9 +165,9 @@ export default function ProfilePage() {
               </form>
             ) : (
               <div className="space-y-2">
-                <div className="text-[#D1D5DB]"><span className="font-medium text-white">Preferred Tone:</span> {profile.preferred_tone || "-"}</div>
-                <div className="text-[#D1D5DB]" ><span className="font-medium text-white">Default Agent:</span> {profile.preferred_agent || "-"}</div>
-                <div className="text-[#D1D5DB]" ><span className="font-medium text-white">Agent Suggestions:</span> {profile.allow_agent_suggestions ? "Enabled" : "Disabled"}</div>
+                <div className="text-[#D1D5DB]"><span className="font-medium text-white">Preferred Tone:</span> {profile?.preferred_tone || "-"}</div>
+                <div className="text-[#D1D5DB]" ><span className="font-medium text-white">Default Agent:</span> {profile?.preferred_agent || "-"}</div>
+                <div className="text-[#D1D5DB]" ><span className="font-medium text-white">Agent Suggestions:</span> {profile?.allow_agent_suggestions ? "Enabled" : "Disabled"}</div>
               </div>
             )}
           </div>

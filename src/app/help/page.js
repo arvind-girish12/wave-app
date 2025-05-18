@@ -137,7 +137,7 @@ export default function HelpPage() {
             <div className="bg-[#1a1333]/80 rounded-xl p-6 shadow-sm">
               <h3 className="font-medium text-white mb-4">Frequently Asked Questions</h3>
               <div className="space-y-2">
-                {FAQs.map((faq, index) => (
+                {FAQs?.map((faq, index) => (
                   <AccordionItem
                     key={index}
                     question={faq.question}
@@ -167,11 +167,11 @@ export default function HelpPage() {
           <section id="emergency-resources">
             <h2 className="text-2xl font-bold text-white mb-6">Emergency Resources</h2>
             <div className="space-y-6">
-              {EMERGENCY_RESOURCES.map((region) => (
+              {EMERGENCY_RESOURCES?.map((region) => (
                 <div key={region.region} className="bg-[#1a1333]/80 rounded-xl p-6 shadow-sm">
                   <h3 className="font-medium text-white mb-4">{region.region}</h3>
                   <div className="space-y-4">
-                    {region.resources.map((resource, index) => (
+                    {region?.resources?.map((resource, index) => (
                       <div key={index} className="border-l-4 border-[#6B4EFF] pl-4">
                         <h4 className="font-medium text-white">{resource.name}</h4>
                         {resource.number && (

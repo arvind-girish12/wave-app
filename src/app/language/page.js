@@ -46,7 +46,7 @@ export default function LanguagePage() {
       const res = await fetch("/api/profile");
       const data = await res.json();
       setPreferences({
-        preferred_tone: data.profile.preferred_tone || "gentle",
+        preferred_tone: data?.profile?.preferred_tone || "gentle",
       });
     } catch (error) {
       console.error('Error fetching preferences:', error);
@@ -115,7 +115,7 @@ export default function LanguagePage() {
                       <label
                         key={opt.value}
                         className={`relative flex flex-col p-6 rounded-xl border-2 cursor-pointer transition-all ${
-                          preferences.preferred_tone === opt.value
+                          preferences?.preferred_tone === opt.value
                             ? 'border-[#6B4EFF] bg-[#6B4EFF]/5 shadow-md'
                             : 'border-gray-200 hover:border-[#6B4EFF]/50 hover:shadow-sm'
                         }`}
@@ -124,13 +124,13 @@ export default function LanguagePage() {
                           type="radio"
                           name="preferred_tone"
                           value={opt.value}
-                          checked={preferences.preferred_tone === opt.value}
+                          checked={preferences?.preferred_tone === opt.value}
                           onChange={() => handleToneChange(opt.value)}
                           className="sr-only"
                         />
                         <div className="flex items-center gap-3 mb-3">
                           <Icon className={`w-6 h-6 ${
-                            preferences.preferred_tone === opt.value
+                            preferences?.preferred_tone === opt.value
                               ? 'text-[#6B4EFF]'
                               : 'text-[#D1D5DB]'
                           }`} />
