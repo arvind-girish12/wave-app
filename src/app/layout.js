@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import LayoutWrapper from "../components/LayoutWrapper";
+import { Toaster } from 'react-hot-toast';
 
 const inter = Inter({
   subsets: ["latin"],
@@ -23,6 +24,7 @@ export default function RootLayout({ children }) {
         <Providers>
           <LayoutWrapper>{children}</LayoutWrapper>
         </Providers>
+        <Toaster position="top-right" />
       </body>
     </html>
   );

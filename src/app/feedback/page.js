@@ -142,7 +142,7 @@ export default function FeedbackPage() {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Tell us what's on your mind..."
-                  className="w-full h-32 px-4 py-3 rounded-lg border border-gray-200 focus:border-[#6B4EFF] focus:ring-1 focus:ring-[#6B4EFF] outline-none resize-none"
+                  className="w-full h-32 px-4 py-3 rounded-lg border border-gray-200 focus:border-[#6B4EFF] focus:ring-1 focus:ring-[#6B4EFF] outline-none resize-none text-black text-sm"
                 />
               </div>
 

@@ -6,6 +6,7 @@ import { supabase } from "../../../utils/supabaseClient";
 import { CheckCircleIcon, CloudIcon, SparklesIcon } from '@heroicons/react/24/solid';
 import { FaBars } from 'react-icons/fa';
 import DashboardSidebar from '../../../components/DashboardSidebar';
+import ShareMood from '../../../components/ShareMood';
 
 export default function SessionDetailsPage() {
   const router = useRouter();
@@ -61,6 +62,7 @@ export default function SessionDetailsPage() {
       <DashboardSidebar mobileOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <main className="flex-1 flex flex-col items-center p-4 md:p-8 w-full md:ml-64 transition-all duration-300">
         <div className="w-full max-w-2xl flex flex-col items-center gap-6 md:gap-8 bg-[#1a1333]/80 rounded-2xl shadow-xl p-4 md:p-8 border-2 border-[#6B4EFF]">
+          <ShareMood analysis={analysis} />
           {/* Topic */}
           <div className="w-full flex items-center justify-between mb-2">
             <h1 className="text-2xl font-bold text-white">Session Details</h1>

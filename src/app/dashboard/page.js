@@ -8,6 +8,7 @@ import WaitlistModal from "../../components/WaitlistModal";
 import DashboardSidebar from "../../components/DashboardSidebar";
 import { CheckCircleIcon, CloudIcon, SunIcon, MoonIcon, SparklesIcon } from '@heroicons/react/24/solid';
 import { FaBars } from 'react-icons/fa';
+import ShareMood from '../../components/ShareMood';
 
 const TOUGH_TONGUE_API_TOKEN = 'n5wfYV9ffqSzULGKGaS5X-7XuUf2Svimj46P1Zlbbx4';
 const SCENARIO_ID = '681df5ff4e0a1c83aae411ec';
@@ -243,6 +244,7 @@ export default function Dashboard() {
           </div>
         ) : transcript && analysis ? (
           <div className="w-full max-w-2xl flex flex-col items-center gap-8 bg-[#1a1333]/80 rounded-3xl shadow-2xl p-8 border border-[#3B2BFF]">
+            <ShareMood analysis={analysis} />
             {/* Today, you felt... */}
             <div className="w-full bg-[#2B176B]/80 rounded-xl shadow p-6 mb-2 border border-[#6B4EFF]">
               <h2 className="text-lg font-semibold text-white mb-2 flex items-center gap-2">

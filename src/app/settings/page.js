@@ -5,6 +5,7 @@ import { FaUser, FaBell, FaCamera, FaCheck, FaBars } from "react-icons/fa";
 import { Switch } from '@headlessui/react';
 import { motion } from "framer-motion";
 import DashboardSidebar from '../../components/DashboardSidebar';
+import { toast } from 'react-hot-toast';
 
 export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
@@ -62,11 +63,12 @@ export default function SettingsPage() {
       });
 
       if (!response.ok) throw new Error('Failed to update profile');
-      
+      toast.success('Profile changes saved!');
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 2000);
     } catch (error) {
       console.error('Error updating profile:', error);
+      toast.error('Failed to save profile changes.');
     } finally {
       setSaving(false);
     }
@@ -93,11 +95,12 @@ export default function SettingsPage() {
       });
 
       if (!response.ok) throw new Error('Failed to update settings');
-      
+      toast.success('Settings saved!');
       setSaveSuccess(true);
       setTimeout(() => setSaveSuccess(false), 2000);
     } catch (error) {
       console.error('Error updating settings:', error);
+      toast.error('Failed to save settings.');
     } finally {
       setSaving(false);
     }
@@ -180,7 +183,7 @@ export default function SettingsPage() {
                   name="display_name"
                   defaultValue={profile.display_name}
                   placeholder="Display Name"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#6B4EFF] focus:ring-[#6B4EFF] transition-colors"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#6B4EFF] focus:ring-[#6B4EFF] transition-colors text-black placeholder:text-gray-400 text-sm px-3 py-2"
                   required
                 />
               </div>
@@ -196,7 +199,7 @@ export default function SettingsPage() {
                   name="pronouns"
                   defaultValue={profile.pronouns}
                   placeholder="e.g., he/him, she/her, they/them"
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#6B4EFF] focus:ring-[#6B4EFF] transition-colors"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#6B4EFF] focus:ring-[#6B4EFF] transition-colors text-black placeholder:text-gray-400 text-sm px-3 py-2"
                 />
               </div>
 
@@ -237,7 +240,7 @@ export default function SettingsPage() {
             <form onSubmit={handleSettingsUpdate} className="space-y-6">
               {/* Notification Toggles */}
               <div className="space-y-4">
-                <div className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
+                <div className="flex items-center justify-between p-4 rounded-lg hover:bg-[#2B176B]/70 transition-colors">
                   <div>
                     <h3 className="font-medium text-gray-300">Daily Mood Reminder</h3>
                     <p className="text-sm text-gray-500">
@@ -259,7 +262,7 @@ export default function SettingsPage() {
                   </Switch>
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
+                <div className="flex items-center justify-between p-4 rounded-lg hover:bg-[#2B176B]/70 transition-colors">
                   <div>
                     <h3 className="font-medium text-gray-300">Weekly Progress Summary</h3>
                     <p className="text-sm text-gray-500">
@@ -281,7 +284,7 @@ export default function SettingsPage() {
                   </Switch>
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
+                <div className="flex items-center justify-between p-4 rounded-lg hover:bg-[#2B176B]/70 transition-colors">
                   <div>
                     <h3 className="font-medium text-gray-300">Journal Suggestions</h3>
                     <p className="text-sm text-gray-500">
@@ -303,7 +306,7 @@ export default function SettingsPage() {
                   </Switch>
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-lg hover:bg-gray-50 transition-colors">
+                <div className="flex items-center justify-between p-4 rounded-lg hover:bg-[#2B176B]/70 transition-colors">
                   <div>
                     <h3 className="font-medium text-gray-300">Exercise Streak Reminders</h3>
                     <p className="text-sm text-gray-500">

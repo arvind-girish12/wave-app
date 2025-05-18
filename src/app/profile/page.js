@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { FaUser, FaCog, FaTags, FaRobot, FaBars } from "react-icons/fa";
 import { motion } from "framer-motion";
 import DashboardSidebar from '../../components/DashboardSidebar';
+import { toast } from 'react-hot-toast';
 
 const TONE_OPTIONS = [
   { value: "gentle", label: "Gentle" },
@@ -54,14 +55,20 @@ export default function ProfilePage() {
   const handleSave = async (e) => {
     e.preventDefault();
     setSaving(true);
-    await fetch("/api/profile/preferences", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(preferences),
-    });
-    setSaving(false);
-    setEditing(false);
-    fetchProfile();
+    try {
+      await fetch("/api/profile/preferences", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(preferences),
+      });
+      toast.success('Preferences saved!');
+      setSaving(false);
+      setEditing(false);
+      fetchProfile();
+    } catch (error) {
+      toast.error('Failed to save preferences.');
+      setSaving(false);
+    }
   };
 
   if (!profile || !stats) {
@@ -139,7 +146,7 @@ export default function ProfilePage() {
               <form onSubmit={handleSave} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-[#D1D5DB]">Preferred Tone</label>
-                  <select name="preferred_tone" value={preferences.preferred_tone} onChange={handlePrefChange} className="mt-1 block w-full rounded-md border-gray-300 focus:border-[#6B4EFF] focus:ring-[#6B4EFF]">
+                  <select name="preferred_tone" value={preferences.preferred_tone} onChange={handlePrefChange} className="mt-1 block w-full rounded-md border-gray-300 focus:border-[#6B4EFF] focus:ring-[#6B4EFF] text-black text-sm px-3 py-2">
                     {TONE_OPTIONS.map((opt) => (
                       <option key={opt.value} value={opt.value}>{opt.label}</option>
                     ))}
@@ -147,7 +154,7 @@ export default function ProfilePage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-[#D1D5DB]">Default Agent</label>
-                  <input type="text" name="preferred_agent" value={preferences.preferred_agent} onChange={handlePrefChange} className="mt-1 block w-full rounded-md border-gray-300 focus:border-[#6B4EFF] focus:ring-[#6B4EFF]" placeholder="e.g., Confidence Coach" />
+                  <input type="text" name="preferred_agent" value={preferences.preferred_agent} onChange={handlePrefChange} className="mt-1 block w-full rounded-md border-gray-300 focus:border-[#6B4EFF] focus:ring-[#6B4EFF] text-black text-sm px-3 py-2" placeholder="e.g., Confidence Coach" />
                 </div>
                 <div className="flex items-center gap-2">
                   <input type="checkbox" id="allow_agent_suggestions" name="allow_agent_suggestions" checked={preferences.allow_agent_suggestions} onChange={handlePrefChange} className="rounded border-gray-300 focus:ring-[#6B4EFF]" />
