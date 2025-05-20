@@ -440,7 +440,7 @@ export default function Dashboard() {
                 <div className="w-full max-w-4xl embedded-content flex justify-center">
                   <iframe
                     ref={iframeRef}
-                    src="https://app.toughtongueai.com/embed/6829a3eb8864498a1f546d52?bg=%23170e32&hidePoweredBy=true&skipPrecheck=true&buttonColor=%23d69ee6"
+                    src="https://app.toughtongueai.com/embed/682a1868ae689d4ad1974efc?bg=%23180e32&hidePoweredBy=true&skipPrecheck=true&buttonColor=%23cb96df"
                     width="100%"
                     height="700px"
                     frameBorder="0"

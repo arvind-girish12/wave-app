@@ -18,6 +18,7 @@ CREATE TABLE user_profiles (
     pronouns TEXT,
     avatar_url TEXT,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    phone_no VARCHAR(32),
     UNIQUE(user_id)
 );
 
