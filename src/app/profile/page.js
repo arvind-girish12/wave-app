@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { FaUser, FaCog, FaTags, FaRobot, FaBars } from "react-icons/fa";
 import { motion } from "framer-motion";
-import DashboardSidebar from '../../components/DashboardSidebar';
 import { toast } from 'react-hot-toast';
 
 const TONE_OPTIONS = [
@@ -18,7 +17,6 @@ export default function ProfilePage() {
   const [editing, setEditing] = useState(false);
   const [preferences, setPreferences] = useState({ preferred_tone: "gentle", preferred_agent: "", allow_agent_suggestions: true });
   const [saving, setSaving] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchProfile();
@@ -100,7 +98,6 @@ export default function ProfilePage() {
       >
         <FaBars className="w-6 h-6" />
       </button>
-      <DashboardSidebar mobileOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <main className="flex-1 p-4 md:p-8 w-full md:ml-64 transition-all duration-300">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl mx-auto space-y-8">
           {/* Profile Overview */}

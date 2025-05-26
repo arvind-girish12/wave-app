@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '../../../utils/supabaseClient';
 import { formatDistanceToNow } from 'date-fns';
 import { FaLink, FaLightbulb, FaRegSmile, FaRegMeh, FaRegFrown, FaArrowLeft, FaEdit } from 'react-icons/fa';
+import { shouldBypassAuthClient } from '../../../utils/environment';
 
 export default function JournalEntryDetail({ params }) {
   const router = useRouter();
@@ -14,14 +15,17 @@ export default function JournalEntryDetail({ params }) {
 
   useEffect(() => {
     const fetchEntry = async () => {
+      if (shouldBypassAuthClient()) {
+        setEntry(null);
+        setLoading(false);
+        return;
+      }
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        
         if (!session) {
           router.push('/login');
           return;
         }
-
         const { data, error } = await supabase
           .from('journal_entries')
           .select(`
@@ -41,7 +45,6 @@ export default function JournalEntryDetail({ params }) {
           `)
           .eq('id', params.id)
           .single();
-
         if (error) throw error;
         setEntry(data);
       } catch (error) {
@@ -51,7 +54,6 @@ export default function JournalEntryDetail({ params }) {
         setLoading(false);
       }
     };
-
     fetchEntry();
   }, [params.id, router]);
 

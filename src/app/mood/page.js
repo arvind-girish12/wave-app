@@ -16,6 +16,7 @@ import {
   Legend,
   ArcElement,
 } from 'chart.js';
+import { shouldBypassAuthClient } from '../../utils/environment';
 
 ChartJS.register(
   CategoryScale,
@@ -71,14 +72,17 @@ export default function MoodTrackerPage() {
   }, []);
 
   const fetchMoodData = async () => {
+    if (shouldBypassAuthClient()) {
+      setMoodEntries([]);
+      setLoading(false);
+      return;
+    }
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      
       if (!session) {
         router.push('/login');
         return;
       }
-
       // Fetch mood entries
       const { data, error } = await supabase
         .from('mood_entries')
@@ -86,9 +90,7 @@ export default function MoodTrackerPage() {
         .eq('user_id', session.user.id)
         .gte('date', new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0])
         .order('date', { ascending: false });
-
       if (error) throw error;
-
       setMoodEntries(data || []);
       calculateStats(data || []);
     } catch (error) {

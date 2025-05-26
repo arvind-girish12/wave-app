@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../../../utils/supabaseClient';
 import { FaArrowLeft, FaCheck, FaPlay, FaPause, FaRegClock } from 'react-icons/fa';
+import { shouldBypassAuthClient } from '../../../utils/environment';
 
 const EXERCISE_TYPE_COLORS = {
   breathing: 'bg-blue-100 text-blue-700',
@@ -24,20 +25,22 @@ export default function ExerciseDetailPage({ params }) {
 
   useEffect(() => {
     const fetchExercise = async () => {
+      if (shouldBypassAuthClient()) {
+        setExercise(null);
+        setLoading(false);
+        return;
+      }
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        
         if (!session) {
           router.push('/login');
           return;
         }
-
         const { data, error } = await supabase
           .from('exercises')
           .select('*')
           .eq('id', params.id)
           .single();
-
         if (error) throw error;
         setExercise(data);
         setTimeLeft(data.duration_sec);
@@ -48,7 +51,6 @@ export default function ExerciseDetailPage({ params }) {
         setLoading(false);
       }
     };
-
     fetchExercise();
   }, [params.id, router]);
 

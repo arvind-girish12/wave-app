@@ -5,7 +5,6 @@ import { useRouter, useParams } from "next/navigation";
 import { supabase } from "../../../utils/supabaseClient";
 import { CheckCircleIcon, CloudIcon, SparklesIcon } from '@heroicons/react/24/solid';
 import { FaBars } from 'react-icons/fa';
-import DashboardSidebar from '../../../components/DashboardSidebar';
 import ShareMood from '../../../components/ShareMood';
 
 export default function SessionDetailsPage() {
@@ -14,7 +13,6 @@ export default function SessionDetailsPage() {
   const { id } = params;
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -59,7 +57,6 @@ export default function SessionDetailsPage() {
       >
         <FaBars className="w-6 h-6" />
       </button>
-      <DashboardSidebar mobileOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <main className="flex-1 flex flex-col items-center p-4 md:p-8 w-full md:ml-64 transition-all duration-300">
         <div className="w-full max-w-2xl flex flex-col items-center gap-6 md:gap-8 bg-[#1a1333]/80 rounded-2xl shadow-xl p-4 md:p-8 border-2 border-[#6B4EFF]">
           <ShareMood analysis={analysis} />

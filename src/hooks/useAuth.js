@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../utils/supabaseClient';
 import { setUser, setSession, setLoading, clearAuth } from '../store/slices/authSlice';
+import { shouldBypassAuthClient } from '../utils/environment';
 
 export const useAuth = () => {
   const dispatch = useDispatch();
@@ -10,6 +11,10 @@ export const useAuth = () => {
   const { user, session, loading } = useSelector((state) => state.auth);
 
   useEffect(() => {
+    if (shouldBypassAuthClient()) {
+      dispatch(setLoading(false));
+      return;
+    }
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {

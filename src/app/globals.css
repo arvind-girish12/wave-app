@@ -4,13 +4,66 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primary: #6B4EFF;
+  --secondary: #F7BFA3;
+  --background: #0A0613;
+  --text: #FFFFFF;
+}
+
+/* Theme-specific styles */
+.light {
+  --primary: #6B4EFF;
+  --secondary: #F7BFA3;
+  --background: #F8FAFC;
+  --text: #1F2937;
+}
+
+.dark {
+  --primary: #6B4EFF;
+  --secondary: #F7BFA3;
+  --background: #0A0613;
+  --text: #FFFFFF;
+}
+
+/* Prevent theme flashing during route transitions */
+html {
+  transition: none !important;
+}
+
+html.light,
+html.dark {
+  transition: none !important;
+}
+
+/* Ensure theme is applied immediately */
+html:not(.light):not(.dark) {
+  /* Default to dark theme if no class is applied yet */
+  --primary: #6B4EFF;
+  --secondary: #F7BFA3;
+  --background: #0A0613;
+  --text: #FFFFFF;
+}
+
+/* Background classes */
+.bg-sky-bg {
+  background-image: url('/sky-bg.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.bg-sky-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 60%, rgba(255,255,255,0.8) 100%);
+  pointer-events: none;
+  z-index: 10;
 }
 
 @theme inline {
   --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-foreground: var(--text);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -24,7 +77,7 @@
 
 body {
   background: var(--background);
-  color: var(--foreground);
+  color: var(--text);
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -95,4 +148,44 @@ body {
   .lato-onboarding p, .lato-onboarding button {
     font-size: 0.95rem !important;
   }
+}
+
+/* Theme mode classes for dashboard */
+.light-mode {
+  --background: #fbefff;
+  --foreground: #22223b;
+  --card-bg: #fff;
+  --card-border: #e3d6f7;
+  --card-shadow: 0 4px 24px 0 rgba(203, 224, 247, 0.15);
+  --primary: #6B4EFF;
+  --secondary: #e3d6f7;
+}
+.dark-mode {
+  --background: #0A0613;
+  --foreground: #ededed;
+  --card-bg: #1a1333;
+  --card-border: #3B2BFF;
+  --card-shadow: 0 4px 24px 0 rgba(59, 43, 255, 0.15);
+  --primary: #6B4EFF;
+  --secondary: #2B176B;
+}
+
+.dashboard-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+  color: var(--foreground);
+}
+
+.dashboard-title {
+  color: var(--foreground);
+}
+
+.dashboard-text {
+  color: var(--foreground);
+}
+
+body, .light-mode, .dark-mode {
+  background: var(--background);
+  color: var(--foreground);
 }

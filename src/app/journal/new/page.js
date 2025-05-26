@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../../../utils/supabaseClient';
 import { FaLink, FaTimes } from 'react-icons/fa';
+import { shouldBypassAuthClient } from '../../../utils/environment';
 
 export default function NewJournalEntry() {
   const router = useRouter();
@@ -15,20 +16,21 @@ export default function NewJournalEntry() {
 
   useEffect(() => {
     const fetchSessions = async () => {
+      if (shouldBypassAuthClient()) {
+        setSessions([]);
+        return;
+      }
       try {
         const { data: { session } } = await supabase.auth.getSession();
-        
         if (!session) {
           router.push('/login');
           return;
         }
-
         const { data, error } = await supabase
           .from('sessions')
           .select('id, topic, created_at')
           .eq('user_id', session.user.id)
           .order('created_at', { ascending: false });
-
         if (error) throw error;
         setSessions(data || []);
       } catch (error) {
@@ -36,7 +38,6 @@ export default function NewJournalEntry() {
         setError('Failed to load sessions');
       }
     };
-
     fetchSessions();
   }, [router]);
 
@@ -44,15 +45,16 @@ export default function NewJournalEntry() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
+    if (shouldBypassAuthClient()) {
+      setLoading(false);
+      return;
+    }
     try {
       const { data: { session } } = await supabase.auth.getSession();
-      
       if (!session) {
         router.push('/login');
         return;
       }
-
       const { data: entry, error: entryError } = await supabase
         .from('journal_entries')
         .insert([
@@ -64,11 +66,7 @@ export default function NewJournalEntry() {
         ])
         .select()
         .single();
-
       if (entryError) throw entryError;
-
-      // TODO: Add AI inference generation here
-      // For now, we'll just redirect to the entry
       router.push(`/journal/${entry.id}`);
     } catch (error) {
       console.error('Error creating journal entry:', error);

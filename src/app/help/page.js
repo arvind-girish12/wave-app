@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { FaChevronDown, FaChevronUp, FaPhone, FaShieldAlt, FaRobot, FaExclamationTriangle, FaBars } from "react-icons/fa";
-import DashboardSidebar from '../../components/DashboardSidebar';
 
 const FAQs = [
   {
@@ -99,9 +98,8 @@ function HelpCard({ icon: Icon, title, children }) {
   );
 }
 
-export default function HelpPage() {
+export default function Help() {
   const [openFaq, setOpenFaq] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const scrollToEmergency = () => {
     document.getElementById('emergency-resources')?.scrollIntoView({ behavior: 'smooth' });
@@ -117,7 +115,6 @@ export default function HelpPage() {
       >
         <FaBars className="w-6 h-6" />
       </button>
-      <DashboardSidebar mobileOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <main className="flex-1 p-4 md:p-8 w-full md:ml-64 transition-all duration-300">
         <div className="max-w-4xl mx-auto space-y-8">
           {/* How Wave Works Section */}

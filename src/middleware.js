@@ -1,7 +1,17 @@
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
+import { shouldBypassAuthServer } from './utils/environment';
 
 export async function middleware(req) {
+  // If on localhost (dev), bypass all auth checks and redirects
+  if (shouldBypassAuthServer()) {
+    // If trying to access login page on localhost, redirect directly to dashboard
+    if (req.nextUrl.pathname === '/login') {
+      return NextResponse.redirect(new URL('/dashboard', req.url));
+    }
+    return NextResponse.next();
+  }
+
   const res = NextResponse.next();
   const supabase = createMiddlewareClient({ req, res });
 

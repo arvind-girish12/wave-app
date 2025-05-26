@@ -4,7 +4,6 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { FaBug, FaLightbulb, FaComment, FaHeart, FaBars } from "react-icons/fa";
 import { toast } from "react-hot-toast";
-import DashboardSidebar from '../../components/DashboardSidebar';
 
 const FEEDBACK_TYPES = [
   {
@@ -33,11 +32,10 @@ const FEEDBACK_TYPES = [
   }
 ];
 
-export default function FeedbackPage() {
+export default function Feedback() {
   const [type, setType] = useState("");
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -73,12 +71,10 @@ export default function FeedbackPage() {
       {/* Hamburger for mobile */}
       <button
         className="md:hidden fixed top-4 left-4 z-50 bg-[#2B176B] p-2 rounded-full shadow-lg border border-[#6B4EFF] text-white"
-        onClick={() => setSidebarOpen(true)}
         aria-label="Open sidebar"
       >
         <FaBars className="w-6 h-6" />
       </button>
-      <DashboardSidebar mobileOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <main className="flex-1 p-4 md:p-8 w-full md:ml-64 transition-all duration-300">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

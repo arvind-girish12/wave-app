@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { FaHeart, FaDumbbell, FaBalanceScale, FaBars } from "react-icons/fa";
-import DashboardSidebar from '../../components/DashboardSidebar';
 
 const TONE_OPTIONS = [
   {
@@ -29,13 +28,12 @@ const TONE_OPTIONS = [
   },
 ];
 
-export default function LanguagePage() {
+export default function Language() {
   const [preferences, setPreferences] = useState({
     preferred_tone: "gentle",
   });
   const [saving, setSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     fetchPreferences();
@@ -85,12 +83,10 @@ export default function LanguagePage() {
       {/* Hamburger for mobile */}
       <button
         className="md:hidden fixed top-4 left-4 z-50 bg-[#2B176B] p-2 rounded-full shadow-lg border border-[#6B4EFF] text-white"
-        onClick={() => setSidebarOpen(true)}
         aria-label="Open sidebar"
       >
         <FaBars className="w-6 h-6" />
       </button>
-      <DashboardSidebar mobileOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <main className="flex-1 p-4 md:p-8 w-full md:ml-64 transition-all duration-300">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

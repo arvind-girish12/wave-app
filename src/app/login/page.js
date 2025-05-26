@@ -1,11 +1,29 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { supabase } from "../../utils/supabaseClient";
+import { shouldBypassAuthClient } from "../../utils/environment";
 
 export default function Login() {
+  const router = useRouter();
+
+  useEffect(() => {
+    // If on localhost, redirect to dashboard immediately
+    if (shouldBypassAuthClient()) {
+      router.push("/dashboard");
+    }
+  }, [router]);
+
   const handleGoogleLogin = async () => {
     try {
+      // If on localhost, just redirect to dashboard
+      if (shouldBypassAuthClient()) {
+        router.push("/dashboard");
+        return;
+      }
+
       const redirectUrl = typeof window !== 'undefined' ? window.location.origin : '';
       await supabase.auth.signInWithOAuth({
         provider: "google",
@@ -17,6 +35,11 @@ export default function Login() {
       console.error("Login error:", err);
     }
   };
+
+  // If on localhost, don't render the login page
+  if (shouldBypassAuthClient()) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF]">
