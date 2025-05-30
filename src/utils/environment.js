@@ -11,6 +11,6 @@ export const isLocalhostServer = () => {
 };
 
 // Use this in middleware/server
-export const shouldBypassAuthServer = () => isLocalhostServer();
+export const shouldBypassAuthServer = () => isLocalhostClient();  // Temporarily disabled to allow viewing login page
 // Use this in client components
 export const shouldBypassAuthClient = () => isLocalhostClient(); 

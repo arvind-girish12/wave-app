@@ -27,15 +27,15 @@ export default function LayoutWrapper({ children }) {
   }
 
   return (
-    <div className="relative min-h-screen flex flex-col">
-      <div className="relative z-20 flex flex-col flex-1 min-h-screen">
+    <div className="relative min-h-screen max-h-screen flex flex-col">
+      <div className="relative z-20 flex flex-col flex-1 min-h-screen max-h-screen">
         <DashboardSidebar 
           onLogout={handleSignOut}
           mobileOpen={mobileOpen}
           onClose={() => setMobileOpen(false)}
         />
         <div 
-          className={`flex flex-col md:flex-row flex-1 relative ${
+          className={`flex flex-col md:flex-row flex-1 relative min-h-screen max-h-screen ${
             theme === 'light' 
               ? 'bg-sky-bg' 
               : 'bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF]'
@@ -57,7 +57,7 @@ export default function LayoutWrapper({ children }) {
           >
             <FaBars className="w-6 h-6" />
           </button>
-          <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 w-full md:ml-64 transition-all duration-300 relative z-10">
+          <main className="flex-1 flex flex-col items-center justify-center p-4 md:p-8 w-full md:ml-64 transition-all duration-300 relative z-10 min-h-screen max-h-screen">
             {children}
           </main>
         </div>

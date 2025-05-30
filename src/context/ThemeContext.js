@@ -9,13 +9,13 @@ export function ThemeProvider({ children }) {
   // Initialize theme from localStorage immediately to prevent flash
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('theme') || 'dark';
+      const savedTheme = localStorage.getItem('theme') || 'light';
       // Apply theme to DOM immediately during initialization
       document.documentElement.classList.remove('dark', 'light');
       document.documentElement.classList.add(savedTheme);
       return savedTheme;
     }
-    return 'dark';
+    return 'light';
   });
   
   const [isInitialized, setIsInitialized] = useState(false);
