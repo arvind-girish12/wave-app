@@ -1,11 +1,32 @@
 "use client";
 
+import { useEffect, useState } from 'react';
 import CharacterReveal from '../../components/CharacterReveal';
+import OnboardingModal from '../../components/OnboardingModal';
+
+const SHOW_ONBOARDING_KEY = 'showOnboardingKey';
 
 export default function Dashboard() {
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hasKey = localStorage.getItem(SHOW_ONBOARDING_KEY);
+      setShowOnboarding(!hasKey);
+    }
+  }, []);
+
+  const handleCloseOnboarding = () => {
+    localStorage.setItem(SHOW_ONBOARDING_KEY, 'true');
+    setShowOnboarding(false);
+  };
+
   return (
-    <main className="flex-1 w-full h-full min-h-screen max-h-screen">
-      <CharacterReveal />
-    </main>
+    <>
+      {showOnboarding && <OnboardingModal onClose={handleCloseOnboarding} />}
+      <main className="flex-1 w-full h-full h-dvh">
+        <CharacterReveal />
+      </main>
+    </>
   );
 } 

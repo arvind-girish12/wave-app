@@ -1,6 +1,6 @@
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
-import { shouldBypassAuthServer } from './utils/environment';
+import { shouldBypassAuthServer, isLocalhostServer } from './utils/environment';
 
 export async function middleware(req) {
   // If on localhost (dev), bypass all auth checks and redirects
@@ -28,7 +28,7 @@ export async function middleware(req) {
                           req.nextUrl.pathname.startsWith('/feedback');
 
   // If accessing a protected route without a session, redirect to login
-  if (isProtectedRoute && !session) {
+  if (isProtectedRoute && !session && !isLocalhostServer()) {
     const redirectUrl = new URL('/login', req.url);
     redirectUrl.searchParams.set('redirectedFrom', req.nextUrl.pathname);
     return NextResponse.redirect(redirectUrl);

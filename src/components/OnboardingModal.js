@@ -62,32 +62,30 @@ export default function OnboardingModal({ onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-[#0A0613]/90 via-[#2B176B]/90 to-[#3B2BFF]/90 flex items-center justify-center z-50">
-      <div className="onboarding-modal-card relative max-w-4xl w-full p-0 mx-4 flex flex-col items-center rounded-2xl border-2 border-[#6B4EFF] shadow-2xl overflow-hidden">
-        <div className="absolute inset-0 z-0" style={{ background: 'url(/onboarding-background.jpeg) center center / cover no-repeat' }} />
-        <div className="absolute inset-0 z-10 bg-[#1a1333]/20" />
+    <div className="fixed inset-0 bg-sky-100/90 flex items-center justify-center z-50">
+      <div className="onboarding-modal-card relative max-w-4xl w-full p-0 mx-4 flex flex-col items-center rounded-2xl border border-gray-200 shadow-2xl overflow-hidden bg-white">
         <div className="relative z-20 w-full p-8 md:p-10 flex flex-col items-center lato-onboarding">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 text-[#D1D5DB] hover:text-white text-2xl font-bold focus:outline-none"
+            className="absolute top-4 right-4 text-gray-400 hover:text-black text-2xl font-bold focus:outline-none"
             aria-label="Close onboarding"
           >
             ×
           </button>
           <div className="flex flex-col items-start text-left w-full max-w-lg mx-auto">
-            <h2 className="text-2xl font-bold mb-5 text-white drop-shadow">Welcome to Wave</h2>
-            <p className="mb-4 text-[#D1D5DB] leading-relaxed">
+            <h2 className="text-2xl font-bold mb-5 text-black drop-shadow-none">Welcome to Wave</h2>
+            <p className="mb-4 text-gray-700 leading-relaxed">
               Wave is your gentle AI companion—here to listen, support, and help you feel heard, anytime you need it. No judgment, just care.<br />
               <span className="block h-2" />
               Your conversations are private and fully encrypted, so you can be yourself and talk freely.
             </p>
-            <div className="mb-4 p-3 rounded-lg bg-[#2B176B]/60 text-[#E9D7FF] text-sm border border-[#6B4EFF]">
+            <div className="mb-4 p-3 rounded-lg bg-indigo-50 text-indigo-800 text-sm border border-indigo-200">
               <b>We are beta testing!</b> We are a small team and your feedback would be extremely valuable. We will not spam you.
             </div>
-            <label className="block text-white font-medium mb-2 mt-2" htmlFor="whatsapp-phone">WhatsApp Number (for feedback, updates, and early access):</label>
+            <label className="block text-black font-medium mb-2 mt-2" htmlFor="whatsapp-phone">WhatsApp Number (for feedback, updates, and early access):</label>
             <div className="flex w-full gap-2 mb-2">
               <select
-                className="rounded-md border border-[#6B4EFF] bg-[#1a1333] text-white px-2 py-2 focus:outline-none focus:ring-2 focus:ring-[#6B4EFF]"
+                className="rounded-md border border-indigo-300 bg-white text-black px-2 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-300"
                 value={countryCode}
                 onChange={e => setCountryCode(e.target.value)}
                 style={{ minWidth: 90 }}
@@ -101,17 +99,17 @@ export default function OnboardingModal({ onClose }) {
                 type="tel"
                 inputMode="tel"
                 autoComplete="tel"
-                className="flex-1 rounded-md border border-[#6B4EFF] bg-[#1a1333] text-white px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#6B4EFF] placeholder:text-[#D1D5DB]"
+                className="flex-1 rounded-md border border-indigo-300 bg-white text-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-300 placeholder:text-gray-400"
                 placeholder="Phone number"
                 value={phone}
                 onChange={handlePhoneChange}
                 maxLength={15}
               />
             </div>
-            {error && <div className="text-red-400 text-xs mb-2">{error}</div>}
+            {error && <div className="text-red-500 text-xs mb-2">{error}</div>}
             <button
               onClick={handleGetStarted}
-              className="bg-[#6B4EFF] text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-[#3B2BFF] transition-colors w-full max-w-xs focus:outline-none focus:ring-2 focus:ring-[#6B4EFF] focus:ring-offset-2 mt-4"
+              className="bg-indigo-500 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:bg-indigo-600 transition-colors w-full max-w-xs focus:outline-none focus:ring-2 focus:ring-indigo-300 focus:ring-offset-2 mt-4"
             >
               Get Started
             </button>

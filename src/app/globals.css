@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@400;700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -78,7 +78,7 @@ html:not(.light):not(.dark) {
 body {
   background: var(--background);
   color: var(--text);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Exo 2', sans-serif;
   overflow-x: hidden;
   height: 100vh;
   margin: 0;
@@ -131,7 +131,7 @@ body {
 }
 
 .lato-onboarding {
-  font-family: 'Lato', Arial, Helvetica, sans-serif !important;
+  font-family: 'Exo 2', sans-serif !important;
 }
 .lato-onboarding h2 {
   font-size: 2.25rem !important;
@@ -192,4 +192,13 @@ body {
 body, .light-mode, .dark-mode {
   background: var(--background);
   color: var(--foreground);
+}
+
+.Typewriter__cursor {
+  color: rgb(67, 56, 202) !important;
+}
+
+.text-gray-700 {
+  --tw-text-opacity: 1;
+  color: rgb(100 111 144 / var(--tw-text-opacity)) !important;
 }

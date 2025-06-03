@@ -5,17 +5,23 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { FaDice, FaCloud, FaDove, FaThumbsUp, FaThumbsDown, FaMicrophone, FaMicrophoneSlash, FaArrowRight } from 'react-icons/fa';
 import Typewriter from 'typewriter-effect';
-import { Inter } from 'next/font/google';
-
-const inter = Inter({ subsets: ['latin'] });
+import { supabase } from '../utils/supabaseClient';
+import FeedbackModal from './FeedbackModal';
 
 const MAX_SKIPS = 3;
 
 const characterIframeMap = {
   1: "https://app.toughtongueai.com/embed/67f654c0f2dd89fc5d2d6043?bg=%23fdfffe&name=Mira&hidePoweredBy=true&skipPrecheck=true&buttonColor=%23c9d7f3&buttonIcon=call&scenarioNameColor=%23c2d3f5&buttonOutline=false",
-  2: "https://app.toughtongueai.com/embed/68355dcd12d822723ba97f50?bg=%23f2e5d4&hidePoweredBy=true&skipPrecheck=true&promptUserInfo=true&buttonColor=%23f1e3f2&buttonOutline=false&scenarioNameColor=%237e6d6d",
-  3: "https://app.toughtongueai.com/embed/683722168d5a66f1aaac837b?bg=%23f7e4ee&skipPrecheck=true&buttonColor=%23fbeffb&buttonOutline=false&scenarioNameColor=%23978787",
-  4: "https://app.toughtongueai.com/embed/68395a3fdb1f6ef1edd06a92?bg=%23fcfffa&skipPrecheck=true&buttonColor=%23a8b0bd&buttonOutline=false&scenarioNameColor=%23898b89"
+  2: "https://app.toughtongueai.com/embed/68355dcd12d822723ba97f50?bg=%23f2e9d4&skipPrecheck=true&buttonColor=%23fac342&buttonIcon=call&buttonOutline=false&scenarioNameColor=%23c9b382&buttonOutline=false",
+  3: "https://app.toughtongueai.com/embed/683722168d5a66f1aaac837b?bg=%23211641&skipPrecheck=true&buttonColor=%23be618c&buttonOutline=false",
+  4: "https://app.toughtongueai.com/embed/68395a3fdb1f6ef1edd06a92?bg=%23fcfffa&skipPrecheck=true&buttonColor=%23a8b0bd&buttonOutline=false&scenarioNameColor=%23898b89&buttonOutline=false"
+};
+
+const characterImageMap = {
+  1: '/mira.jpg',
+  2: '/novajames.gif',
+  3: '/seraphina.jpg',
+  4: '/maccallan.jpg',
 };
 
 export default function CharacterReveal() {
@@ -31,6 +37,17 @@ export default function CharacterReveal() {
   const [isRequestingPermission, setIsRequestingPermission] = useState(false);
   const iframeRef = useRef(null);
   const [characters, setCharacters] = useState([]);
+  const wakeLockRef = useRef(null);
+  const sessionInfoRef = useRef({
+    startTime: null,
+    endTime: null,
+    sessionIdText: null,
+    characterId: null,
+    userEmail: null,
+    timeoutId: null,
+  });
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+  const [lastSessionIdText, setLastSessionIdText] = useState(null);
 
   useEffect(() => {
     async function fetchCharacters() {
@@ -43,6 +60,96 @@ export default function CharacterReveal() {
     }
     fetchCharacters();
   }, []);
+
+  useEffect(() => {
+    async function requestWakeLock() {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLockRef.current = await navigator.wakeLock.request('screen');
+        }
+      } catch (err) {
+        console.error('Wake Lock error:', err);
+      }
+    }
+
+    function releaseWakeLock() {
+      if (wakeLockRef.current) {
+        wakeLockRef.current.release();
+        wakeLockRef.current = null;
+      }
+    }
+
+    async function fetchUserEmail() {
+      let userEmail = 'localhost'; // default fallback
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user?.email) {
+          userEmail = session.user.email;
+        }
+      } catch (e) {
+        // ignore, fallback to localhost
+      }
+      sessionInfoRef.current.userEmail = userEmail; // always set, even if async fails
+      console.log('[CharacterReveal] Using userEmail:', userEmail);
+      return userEmail;
+    }
+
+    async function handleMessage(event) {
+      // Optional: verify the origin for security
+      // if (event.origin !== 'https://app.toughtongueai.com') return;
+      const data = event.data;
+      if (data && data.event) {
+        switch (data.event) {
+          case 'onStart':
+            console.log('[CharacterReveal] onStart event received:', data);
+            sessionInfoRef.current.startTime = Date.now();
+            sessionInfoRef.current.sessionIdText = data.sessionId || null;
+            sessionInfoRef.current.characterId = currentCharacter?.id;
+            fetchUserEmail(); // don't await, just call to set ref as soon as possible
+            requestWakeLock();
+            break;
+          case 'onStop':
+            console.log('[CharacterReveal] onStop event received:', data);
+            sessionInfoRef.current.endTime = Date.now();
+            const durationSeconds = Math.floor((sessionInfoRef.current.endTime - sessionInfoRef.current.startTime) / 1000);
+            const userEmail = sessionInfoRef.current.userEmail || 'localhost';
+            const payload = {
+              user_email: userEmail,
+              character_id: sessionInfoRef.current.characterId,
+              session_id: sessionInfoRef.current.sessionIdText,
+              started_at: new Date(sessionInfoRef.current.startTime).toISOString(),
+              ended_at: new Date(sessionInfoRef.current.endTime).toISOString(),
+              duration_seconds: durationSeconds,
+            };
+            console.log('[CharacterReveal] Scheduling API call to /api/character-session in 10s with payload:', payload);
+            sessionInfoRef.current.timeoutId = setTimeout(async () => {
+              console.log('[CharacterReveal] Making API call to /api/character-session...');
+              const res = await fetch('/api/character-session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+              });
+              if (res.ok) {
+                setLastSessionIdText(sessionInfoRef.current.sessionIdText);
+                setShowFeedbackModal(true);
+                console.log('[CharacterReveal] Feedback modal should now be visible.');
+              } else {
+                console.error('[CharacterReveal] API call failed:', await res.text());
+              }
+            }, 10000);
+            releaseWakeLock();
+            break;
+        }
+      }
+    }
+
+    window.addEventListener('message', handleMessage);
+    return () => {
+      window.removeEventListener('message', handleMessage);
+      releaseWakeLock();
+      if (sessionInfoRef.current.timeoutId) clearTimeout(sessionInfoRef.current.timeoutId);
+    };
+  }, [currentCharacter]);
 
   const requestMicrophonePermission = async () => {
     try {
@@ -83,23 +190,45 @@ export default function CharacterReveal() {
     setShowFeedback(false);
     setLoading(true);
     setSkipsRemaining(prev => prev - 1);
+    // Remove current character from the list
+    setCharacters(prevChars => prevChars.filter(c => c.id !== currentCharacter.id));
     // Simulate new character loading
     setTimeout(() => {
       setLoading(false);
-      setCurrentCharacter(characters[Math.floor(Math.random() * characters.length)]);
+      setCurrentCharacter(prev => {
+        // Pick a new character from the updated list
+        const available = characters.filter(c => c.id !== currentCharacter.id);
+        return available[Math.floor(Math.random() * available.length)];
+      });
     }, 2500);
   };
 
   const skipCharacter = () => {
     if (characters.length < 2 || skipsRemaining <= 0) return;
-    let next;
-    do {
-      next = characters[Math.floor(Math.random() * characters.length)];
-    } while (next.id === currentCharacter.id);
+    // Remove current character from the list
+    const updatedCharacters = characters.filter(c => c.id !== currentCharacter.id);
+    setCharacters(updatedCharacters);
+    // Pick a new character from the updated list
+    const next = updatedCharacters[Math.floor(Math.random() * updatedCharacters.length)];
     setCurrentCharacter(next);
     setShowFeedback(false);
     setStartConversation(false);
     setSkipsRemaining(prev => prev - 1);
+  };
+
+  // Feedback modal submit handler
+  const handleFeedbackSubmit = async ({ rating, preferDifferent, characterPreference }) => {
+    if (!lastSessionIdText) return;
+    await fetch('/api/character-session', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        session_id: lastSessionIdText,
+        rating,
+        feedback: preferDifferent ? characterPreference : '',
+      }),
+    });
+    setShowFeedbackModal(false);
   };
 
   // Loading Screen
@@ -108,7 +237,7 @@ export default function CharacterReveal() {
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className={`flex flex-col items-center justify-center min-h-[80vh] ${inter.className}`}
+        className="flex flex-col items-center justify-center min-h-[80vh]"
       >
         <motion.div
           animate={{ 
@@ -136,7 +265,7 @@ export default function CharacterReveal() {
 
   // Character Preview
   return (
-    <div className={`relative min-h-screen max-h-screen w-full ${inter.className}`}>
+    <div className={`relative min-h-screen max-h-screen w-full`}>
       {/* Animated Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Clouds */}
@@ -165,13 +294,22 @@ export default function CharacterReveal() {
         </motion.div>
       </div>
 
-      <div className="relative z-10 w-full px-2 md:px-4 py-8">
+      <div className="relative z-10 w-full px-2 md:px-4 py-8 flex-1 h-dvh">
         {/* Skips left icon/counter at the top right */}
         {skipsRemaining > 0 && (
-          <div className="absolute top-2 right-2 flex items-center gap-1 bg-white/70 rounded-full px-3 py-1 shadow text-xs font-semibold text-black z-20">
-            <FaDice className="w-3 h-3" />
-            Skips left: {skipsRemaining}
-          </div>
+          <>
+            <div className="absolute top-2 right-2 flex items-center gap-1 bg-white/70 rounded-full px-3 py-1 shadow text-xs font-semibold text-black z-20">
+              <FaDice className="w-3 h-3" />
+              Skips left: {skipsRemaining}
+            </div>
+            <button
+              onClick={skipCharacter}
+              className="absolute top-10 right-2 z-50 bg-gray-200 text-gray-800 px-5 py-3 rounded-full shadow-lg text-sm font-semibold hover:bg-gray-300 transition flex items-center gap-2"
+              aria-label="Skip to next character"
+            >
+              Skip <FaArrowRight className="w-4 h-4" />
+            </button>
+          </>
         )}
         <AnimatePresence mode="wait">
           {!showFeedback && !startConversation ? (
@@ -180,7 +318,7 @@ export default function CharacterReveal() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="space-y-8 mt-16"
+              className="space-y-8 mt-16 flex-1"
             >
               {/* Headline */}
               <div className="h-[80px] flex items-center">
@@ -193,7 +331,7 @@ export default function CharacterReveal() {
                           setTimeout(() => {
                             typewriter
                               .deleteAll()
-                              .typeString("Say hi to your new listening buddy 👋")
+                              .typeString("Say Hi to your new listening buddy 👋")
                               .start();
                           }, 1000);
                         })
@@ -212,18 +350,25 @@ export default function CharacterReveal() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="backdrop-blur-lg rounded-2xl p-4 md:p-6 bg-white/30 border border-white/50 w-full h-[580px] overflow-y-auto"
+                className="backdrop-blur-lg rounded-2xl p-4 md:p-6 bg-white/30 border border-white/50 w-full h-[360px] md:h-[480px] overflow-y-auto"
               >
-                <div className="space-y-8">
+                <div className="flex flex-row items-start gap-6 h-full">
                   {/* Avatar Placeholder */}
-                  <div className="w-40 h-40 rounded-full bg-gradient-to-br from-[#6B4EFF] to-[#F7BFA3] flex items-center justify-center">
-                    <span className="text-5xl font-bold text-white">
-                      {currentCharacter.name[0]}
-                    </span>
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#6B4EFF] to-[#F7BFA3] flex items-center justify-center overflow-hidden">
+                    {characterImageMap[currentCharacter.id] ? (
+                      <img
+                        src={characterImageMap[currentCharacter.id]}
+                        alt={currentCharacter.name}
+                        className="object-cover w-20 h-20 rounded-full"
+                      />
+                    ) : (
+                      <span className="text-2xl font-bold text-white">
+                        {currentCharacter.name[0]}
+                      </span>
+                    )}
                   </div>
-
                   {/* Character Info */}
-                  <div className="space-y-4">
+                  <div className="space-y-4 flex-1 overflow-y-auto">
                     <div className="text-[20px] font-bold text-black">{currentCharacter.name}</div>
                     <div className="text-[16px] text-black">
                       {currentCharacter.age} years old • From {currentCharacter.country}
@@ -334,8 +479,8 @@ export default function CharacterReveal() {
                   ref={iframeRef}
                   src={characterIframeMap[currentCharacter.id]}
                   width="360"
-                  height="720"
-                  className="rounded-lg shadow-lg w-[360px] md:w-[720px]"
+                  height="450"
+                  className="rounded-lg shadow-lg w-[360px] md:w-[720px] h-[450px] md:h-[720px]"
                   frameBorder="0"
                   allow="microphone; camera; display-capture"
                 />
@@ -405,17 +550,7 @@ export default function CharacterReveal() {
           )}
         </AnimatePresence>
       </div>
-
-      {/* Fixed Next/Skip CTA at bottom right, only if skips remain */}
-      {skipsRemaining > 0 && (
-        <button
-          onClick={skipCharacter}
-          className="fixed bottom-6 right-6 z-50 bg-gray-200 text-gray-800 px-5 py-3 rounded-full shadow-lg text-sm font-semibold hover:bg-gray-300 transition flex items-center gap-2"
-          aria-label="Skip to next character"
-        >
-          Skip <FaArrowRight className="w-4 h-4" />
-        </button>
-      )}
+      <FeedbackModal open={showFeedbackModal} onClose={() => setShowFeedbackModal(false)} onSubmit={handleFeedbackSubmit} />
     </div>
   );
 } 

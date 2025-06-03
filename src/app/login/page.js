@@ -10,7 +10,6 @@ export default function Login() {
   const router = useRouter();
 
   useEffect(() => {
-    // If on localhost, redirect to dashboard immediately
     if (shouldBypassAuthClient()) {
       router.push("/dashboard");
     }
@@ -18,12 +17,10 @@ export default function Login() {
 
   const handleGoogleLogin = async () => {
     try {
-      // If on localhost, just redirect to dashboard
       if (shouldBypassAuthClient()) {
         router.push("/dashboard");
         return;
       }
-
       const redirectUrl = typeof window !== 'undefined' ? window.location.origin : '';
       await supabase.auth.signInWithOAuth({
         provider: "google",
@@ -36,18 +33,31 @@ export default function Login() {
     }
   };
 
-  // If on localhost, don't render the login page
   if (shouldBypassAuthClient()) {
     return null;
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0A0613] via-[#2B176B] to-[#3B2BFF]">
-      <div className="bg-[#1a1333]/80 shadow-2xl rounded-2xl px-8 py-12 w-full max-w-md flex flex-col items-center border-2 border-[#6B4EFF]">
-        <h1 className="text-3xl font-bold text-white mb-2 drop-shadow">Welcome to Wave</h1>
-        <p className="text-[#D1D5DB] mb-8 text-center">Sign in to continue</p>
+    <div className="min-h-dvh w-full flex flex-col items-center justify-center relative lato-onboarding">
+      <div className="absolute inset-0 pointer-events-none z-0" />
+      <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-lg px-4 py-8 mx-auto">
+        <Image
+          src="/loginpage.png"
+          alt="Login Illustration"
+          width={480}
+          height={480}
+          priority
+          className="sm:w-64 sm:h-64 object-contain mx-auto mt-8"
+        />
+        <h1 className="text-3xl sm:text-5xl font-bold text-black text-center mb-4">Talk To Emotionally Intelligent</h1>
+        <h2 className="text-base sm:text-lg font-medium text-black text-center tracking-widest mb-6">AI STRANGERS</h2>
+        <p className="text-gray-700 text-center mb-10 text-sm sm:text-base max-w-m mx-auto leading-relaxed">
+          <span className="block mb-3">Trained by Therapists and Transcripts</span>
+          <span className="block mb-3">100% Unbiased and Judgement Free</span>
+          <span className="block mb-3">Inspired by Actual Human Lives</span>
+        </p>
         <button
-          className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-[#6B4EFF] text-white font-semibold text-lg shadow-lg hover:bg-[#3B2BFF] transition-colors mb-4 border border-[#6B4EFF] focus:outline-none focus:ring-2 focus:ring-[#6B4EFF] focus:ring-offset-2"
+          className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-sky-400 text-white font-semibold text-lg shadow-lg hover:bg-sky-500 transition-colors mb-4 border border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2"
           onClick={handleGoogleLogin}
         >
           <Image src="/google-logo.png" alt="Google logo" width={24} height={24} />

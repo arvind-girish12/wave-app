@@ -10,7 +10,11 @@ export const isLocalhostServer = () => {
   return process.env.NEXT_PUBLIC_BYPASS_AUTH === 'true';
 };
 
-// Use this in middleware/server
-export const shouldBypassAuthServer = () => isLocalhostClient();  // Temporarily disabled to allow viewing login page
-// Use this in client components
-export const shouldBypassAuthClient = () => isLocalhostClient(); 
+export const shouldBypassAuthServer = () => false;
+
+export const shouldBypassAuthClient = () => false;
+
+// // Use this in middleware/server
+// export const shouldBypassAuthServer = () => isLocalhostClient();  // Temporarily disabled to allow viewing login page
+// // Use this in client components
+// export const shouldBypassAuthClient = () => isLocalhostClient(); 
