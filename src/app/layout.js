@@ -1,5 +1,6 @@
 import "./globals.css";
 import { ThemeProvider } from "../context/ThemeContext";
+import { MenuProvider } from "../context/MenuContext";
 import { Toaster } from 'react-hot-toast';
 import LayoutWrapper from "../components/LayoutWrapper";
 
@@ -30,9 +31,11 @@ export default function RootLayout({ children }) {
       </head>
       <body className="antialiased">
         <ThemeProvider>
-          <LayoutWrapper>
-            {children}
-          </LayoutWrapper>
+          <MenuProvider>
+            <LayoutWrapper>
+              {children}
+            </LayoutWrapper>
+          </MenuProvider>
         </ThemeProvider>
         <Toaster position="top-right" />
       </body>

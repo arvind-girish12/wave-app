@@ -1,14 +1,16 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { supabase } from '../utils/supabaseClient';
 import { useTheme } from '../context/ThemeContext';
+import { useMenu } from '../context/MenuContext';
 import DashboardSidebar from './DashboardSidebar';
 import { FaBars } from 'react-icons/fa';
 
 export default function LayoutWrapper({ children }) {
   const { theme, isInitialized } = useTheme();
+  const { isMenuVisible } = useMenu();
   const router = useRouter();
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -16,6 +18,10 @@ export default function LayoutWrapper({ children }) {
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     router.push("/login");
+  };
+
+  const toggleMenu = () => {
+    setMobileOpen(!mobileOpen);
   };
 
   // Show a minimal loading state until theme is initialized
@@ -30,8 +36,8 @@ export default function LayoutWrapper({ children }) {
   return (
     <div className="relative flex flex-col min-h-screen">
       <div className="relative z-20 flex flex-col flex-1 h-dvh">
-        {/* Only show sidebar if not on login page */}
-        {pathname !== '/login' && (
+        {/* Only show sidebar if not on login page and menu is visible */}
+        {pathname !== '/login' && isMenuVisible && (
           <DashboardSidebar 
             onLogout={handleSignOut}
             mobileOpen={mobileOpen}
@@ -52,17 +58,17 @@ export default function LayoutWrapper({ children }) {
           {theme === 'light' && (
             <div className="absolute inset-0 bg-white/20 pointer-events-none z-0"></div>
           )}
-          {/* Hamburger for mobile, not on login page */}
-          {pathname !== '/login' && (
+          {/* Hamburger for mobile, not on login page, and menu is visible */}
+          {pathname !== '/login' && isMenuVisible && (
             <button
               className="md:hidden fixed top-4 left-4 z-50 bg-[#2B176B] p-2 rounded-full shadow-lg border border-[#6B4EFF] text-white"
-              onClick={() => setMobileOpen(true)}
-              aria-label="Open sidebar"
+              onClick={toggleMenu}
+              aria-label="Toggle sidebar"
             >
               <FaBars className="w-6 h-6" />
             </button>
           )}
-          <main className={`flex-1 flex flex-col items-center justify-center p-4 md:p-8 w-full transition-all duration-300 relative z-10 h-dvh${pathname !== '/login' ? ' md:ml-64' : ''}`}>
+          <main className={`flex-1 flex flex-col items-center justify-center p-4 md:p-8 w-full transition-all duration-300 relative z-10 h-dvh${pathname !== '/login' && isMenuVisible ? ' md:ml-64' : ''}`}>
             {children}
           </main>
         </div>

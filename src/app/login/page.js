@@ -38,30 +38,36 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-dvh w-full flex flex-col items-center justify-center relative lato-onboarding">
-      <div className="absolute inset-0 pointer-events-none z-0" />
-      <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-lg px-4 py-8 mx-auto">
+    <div className="min-h-dvh w-full flex flex-col items-center justify-center relative lato-onboarding bg-sky-bg">
+      <div className="absolute inset-0 pointer-events-none z-0 bg-sky-overlay" />
+      <div className="relative z-10 flex flex-col items-center justify-center w-full px-4 py-8 mx-auto">
+        <h1 className="text-4xl sm:text-6xl font-extrabold text-black text-center mb-3 w-full">Welcome to Wave</h1>
+        <h2 className="text-lg sm:text-2xl font-medium text-gray-800 text-center mb-6 w-full">A place where you can feel <span className="font-bold text-indigo-600">heard</span> and <span className="font-bold text-indigo-600">understood</span></h2>
+        {/* Image + Description Section */}
         <Image
           src="/loginpage.png"
-          alt="Login Illustration"
-          width={480}
-          height={480}
+          alt="Calm, emotionally soft illustration"
+          width={360}
+          height={360}
           priority
-          className="sm:w-64 sm:h-64 object-contain mx-auto mt-8"
+          className="w-48 h-48 sm:w-64 sm:h-64 object-contain mx-auto mb-8"
         />
-        <h1 className="text-3xl sm:text-5xl font-bold text-black text-center mb-4">Talk To Emotionally Intelligent</h1>
-        <h2 className="text-base sm:text-lg font-medium text-black text-center tracking-widest mb-6">AI STRANGERS</h2>
-        <p className="text-gray-700 text-center mb-10 text-sm sm:text-base max-w-m mx-auto leading-relaxed">
-          <span className="block mb-3">Trained by Therapists and Transcripts</span>
-          <span className="block mb-3">100% Unbiased and Judgement Free</span>
-          <span className="block mb-3">Inspired by Actual Human Lives</span>
-        </p>
+        <ul className="text-gray-700 text-center text-base sm:text-lg space-y-3 mb-16 w-full">
+          <li>• Built with <span className="font-bold text-indigo-700">care</span> by therapists & real-life stories</li>
+          <li>• <span className="font-bold text-indigo-700">Available 24/7</span> when it's too hard to talk to anyone else</li>
+          <li>• No <span className="font-bold text-indigo-700">judgement</span>. Just <span className="font-bold text-indigo-700">presence</span>.</li>
+        </ul>
+        {/* Testimonial */}
+        <div className="italic text-center text-gray-600 text-base sm:text-lg mb-8 flex flex-col items-center w-full">
+          <span> "This helped me feel less alone at 2AM." </span>
+          <span className="mt-2 text-sm not-italic text-gray-500">— A real user</span>
+        </div>
         <button
-          className="flex items-center justify-center gap-2 w-full py-3 rounded-lg bg-sky-400 text-white font-semibold text-lg shadow-lg hover:bg-sky-500 transition-colors mb-4 border border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2"
+          className="w-full max-w-xs mx-auto py-4 rounded-xl bg-sky-500 text-white font-bold text-lg shadow-lg hover:bg-sky-600 transition-all focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 mb-2"
+          tabIndex={0}
           onClick={handleGoogleLogin}
         >
-          <Image src="/google-logo.png" alt="Google logo" width={24} height={24} />
-          Log in with Google
+          Start Talking for Free
         </button>
       </div>
     </div>

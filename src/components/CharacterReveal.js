@@ -3,18 +3,20 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
-import { FaDice, FaCloud, FaDove, FaThumbsUp, FaThumbsDown, FaMicrophone, FaMicrophoneSlash, FaArrowRight } from 'react-icons/fa';
+import { FaDice, FaCloud, FaDove, FaThumbsUp, FaThumbsDown, FaMicrophone, FaMicrophoneSlash, FaArrowRight, FaArrowLeft } from 'react-icons/fa';
 import Typewriter from 'typewriter-effect';
 import { supabase } from '../utils/supabaseClient';
 import FeedbackModal from './FeedbackModal';
+import SwipeableAgentCard from './SwipeableAgentCard';
+import { useMenu } from '../context/MenuContext';
 
 const MAX_SKIPS = 3;
 
 const characterIframeMap = {
-  1: "https://app.toughtongueai.com/embed/67f654c0f2dd89fc5d2d6043?bg=%23fdfffe&name=Mira&hidePoweredBy=true&skipPrecheck=true&buttonColor=%23c9d7f3&buttonIcon=call&scenarioNameColor=%23c2d3f5&buttonOutline=false",
-  2: "https://app.toughtongueai.com/embed/68355dcd12d822723ba97f50?bg=%23f2e9d4&skipPrecheck=true&buttonColor=%23fac342&buttonIcon=call&buttonOutline=false&scenarioNameColor=%23c9b382&buttonOutline=false",
-  3: "https://app.toughtongueai.com/embed/683722168d5a66f1aaac837b?bg=%23211641&skipPrecheck=true&buttonColor=%23be618c&buttonOutline=false",
-  4: "https://app.toughtongueai.com/embed/68395a3fdb1f6ef1edd06a92?bg=%23fcfffa&skipPrecheck=true&buttonColor=%23a8b0bd&buttonOutline=false&scenarioNameColor=%23898b89&buttonOutline=false"
+  1: "https://app.toughtongueai.com/embed/67f654c0f2dd89fc5d2d6043?bg=%23fdfffe&name=Mira&hidePoweredBy=true&skipPrecheck=true&buttonColor=%23c9d7f3&buttonIcon=call&scenarioNameColor=%23c2d3f5&buttonOutline=false&allowInteraction=true",
+  2: "https://app.toughtongueai.com/embed/68355dcd12d822723ba97f50?bg=%23f2e9d4&skipPrecheck=true&buttonColor=%23fac342&buttonIcon=call&buttonOutline=false&scenarioNameColor=%23c9b382&buttonOutline=false&allowInteraction=true",
+  3: "https://app.toughtongueai.com/embed/683722168d5a66f1aaac837b?bg=%23211641&skipPrecheck=true&buttonColor=%23be618c&buttonOutline=false&allowInteraction=true",
+  4: "https://app.toughtongueai.com/embed/68395a3fdb1f6ef1edd06a92?bg=%23fcfffa&skipPrecheck=true&buttonColor=%23a8b0bd&buttonOutline=false&scenarioNameColor=%23898b89&buttonOutline=false&allowInteraction=true"
 };
 
 const characterImageMap = {
@@ -26,6 +28,7 @@ const characterImageMap = {
 
 export default function CharacterReveal() {
   const { theme } = useTheme();
+  const { setIsMenuVisible } = useMenu();
   const [loading, setLoading] = useState(true);
   const [currentCharacter, setCurrentCharacter] = useState(null);
   const [skipsRemaining, setSkipsRemaining] = useState(MAX_SKIPS);
@@ -48,12 +51,13 @@ export default function CharacterReveal() {
   });
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [lastSessionIdText, setLastSessionIdText] = useState(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     async function fetchCharacters() {
       const res = await fetch('/api/characters');
       const data = await res.json();
-      setCharacters(data);
+      setCharacters([...data].sort(() => Math.random() - 0.5));
       if (data && data.length) {
         setCurrentCharacter(data[Math.floor(Math.random() * data.length)]);
       }
@@ -151,6 +155,24 @@ export default function CharacterReveal() {
     };
   }, [currentCharacter]);
 
+  useEffect(() => {
+    // Always start session on first dot
+    if (characters.length) {
+      setCurrentIndex(0);
+    }
+  }, [characters]);
+
+  // Navigation logic: move to next/prev agent (0-3)
+  const goToNextAgent = () => {
+    setCurrentIndex(idx => Math.min(idx + 1, 3));
+  };
+  const goToPrevAgent = () => {
+    setCurrentIndex(idx => Math.max(idx - 1, 0));
+  };
+
+  // Current agent
+  const currentAgent = characters[currentIndex] || null;
+
   const requestMicrophonePermission = async () => {
     try {
       setIsRequestingPermission(true);
@@ -216,6 +238,12 @@ export default function CharacterReveal() {
     setSkipsRemaining(prev => prev - 1);
   };
 
+  // Updated matchNewCharacter to prevent left swipe on last agent
+  const matchNewCharacterSafe = () => {
+    if (currentIndex >= 3) return; // Prevent swipe if on last agent
+    matchNewCharacter();
+  };
+
   // Feedback modal submit handler
   const handleFeedbackSubmit = async ({ rating, preferDifferent, characterPreference }) => {
     if (!lastSessionIdText) return;
@@ -229,6 +257,20 @@ export default function CharacterReveal() {
       }),
     });
     setShowFeedbackModal(false);
+    // Reset conversation state to show character screen
+    setStartConversation(false);
+    setMicPermission(null);
+    if (iframeRef.current) {
+      iframeRef.current.src = ''; // Clear the iframe src
+    }
+  };
+
+  const handleExitConversation = () => {
+    setStartConversation(false);
+    setMicPermission(null);
+    if (iframeRef.current) {
+      iframeRef.current.src = ''; // Clear the iframe src
+    }
   };
 
   // Loading Screen
@@ -294,263 +336,130 @@ export default function CharacterReveal() {
         </motion.div>
       </div>
 
-      <div className="relative z-10 w-full px-2 md:px-4 py-8 flex-1 h-dvh">
-        {/* Skips left icon/counter at the top right */}
-        {skipsRemaining > 0 && (
-          <>
-            <div className="absolute top-2 right-2 flex items-center gap-1 bg-white/70 rounded-full px-3 py-1 shadow text-xs font-semibold text-black z-20">
-              <FaDice className="w-3 h-3" />
-              Skips left: {skipsRemaining}
-            </div>
-            <button
-              onClick={skipCharacter}
-              className="absolute top-10 right-2 z-50 bg-gray-200 text-gray-800 px-5 py-3 rounded-full shadow-lg text-sm font-semibold hover:bg-gray-300 transition flex items-center gap-2"
-              aria-label="Skip to next character"
-            >
-              Skip <FaArrowRight className="w-4 h-4" />
-            </button>
-          </>
+      <div className="relative z-10 w-full px-2 md:px-4 py-8 flex-1 h-dvh flex flex-col items-center justify-center">
+        {/* Instruction */}
+        {!startConversation && !showFeedback && (
+          <div className="mb-6 text-center text-base sm:text-lg text-gray-700/80">
+            <Typewriter
+              options={{
+                strings: ["We've handpicked a pool of the best listeners for you. Swipe to find your vibe and start a convo with whoever feels right."],
+                autoStart: true,
+                loop: false,
+                delay: 50,
+              }}
+            />
+          </div>
         )}
-        <AnimatePresence mode="wait">
-          {!showFeedback && !startConversation ? (
-            <motion.div
-              key="preview"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="space-y-8 mt-16 flex-1"
-            >
-              {/* Headline */}
-              <div className="h-[80px] flex items-center">
-                <div className="text-[24px] font-semibold text-black">
-                  <Typewriter
-                    onInit={(typewriter) => {
-                      typewriter
-                        .typeString("You've just been matched with someone interesting")
-                        .callFunction(() => {
-                          setTimeout(() => {
-                            typewriter
-                              .deleteAll()
-                              .typeString("Say Hi to your new listening buddy 👋")
-                              .start();
-                          }, 1000);
-                        })
-                        .start();
-                    }}
-                    options={{
-                      delay: 50,
-                      cursor: '▋',
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* Character Card */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="backdrop-blur-lg rounded-2xl p-4 md:p-6 bg-white/30 border border-white/50 w-full h-[360px] md:h-[480px] overflow-y-auto"
+        {/* Queue Indicator */}
+        {!startConversation && (
+          <div className="flex justify-center items-center gap-2 mb-4">
+            {[0,1,2,3].map(idx => (
+              <span key={idx} className={`w-2 h-2 rounded-full ${idx === currentIndex ? 'bg-indigo-500' : 'bg-gray-300'}`}></span>
+            ))}
+          </div>
+        )}
+        {/* Arrow Controls + Swipeable Card or Iframe */}
+        <div className="relative flex items-center justify-center w-full max-w-none mx-auto gap-0" style={{ minHeight: '1px' }}>
+          {/* Left Arrow: absolutely positioned */}
+          {!startConversation && (
+            <div className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-10">
+              <button
+                className={`p-2 rounded-full bg-white/80 shadow hover:bg-indigo-100 transition-colors text-indigo-500 ${currentIndex === 0 ? 'invisible' : ''}`}
+                onClick={goToPrevAgent}
+                aria-label="Previous agent"
+                aria-hidden={currentIndex === 0}
+                tabIndex={currentIndex === 0 ? -1 : 0}
+                style={{ width: 48, height: 48 }}
               >
-                <div className="flex flex-row items-start gap-6 h-full">
-                  {/* Avatar Placeholder */}
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#6B4EFF] to-[#F7BFA3] flex items-center justify-center overflow-hidden">
-                    {characterImageMap[currentCharacter.id] ? (
-                      <img
-                        src={characterImageMap[currentCharacter.id]}
-                        alt={currentCharacter.name}
-                        className="object-cover w-20 h-20 rounded-full"
-                      />
-                    ) : (
-                      <span className="text-2xl font-bold text-white">
-                        {currentCharacter.name[0]}
-                      </span>
-                    )}
-                  </div>
-                  {/* Character Info */}
-                  <div className="space-y-4 flex-1 overflow-y-auto">
-                    <div className="text-[20px] font-bold text-black">{currentCharacter.name}</div>
-                    <div className="text-[16px] text-black">
-                      {currentCharacter.age} years old • From {currentCharacter.country}
-                    </div>
-                    {currentCharacter.voice_style && (
-                      <div className="text-[14px] text-indigo-700 italic">
-                        Voice style: {currentCharacter.voice_style}
-                      </div>
-                    )}
-                    <div className="text-[16px] text-gray-800 font-medium">
-                      {currentCharacter.description}
-                    </div>
-                    <div>
-                      <div className="font-semibold text-[15px] text-black">Life experiences:</div>
-                      <ul className="list-disc ml-5 text-[15px] text-gray-700">
-                        {currentCharacter.childhood.map((item, idx) => (
-                          <li key={idx}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <div className="font-semibold text-[15px] text-black">Cool traits:</div>
-                      <ul className="list-disc ml-5 text-[15px] text-gray-700">
-                        {currentCharacter.cool_traits.map((item, idx) => (
-                          <li key={idx}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {currentCharacter.tags.map((tag, idx) => (
-                        <span
-                          key={idx}
-                          className="px-3 py-1 rounded-full text-[14px] font-semibold bg-indigo-100 text-indigo-700"
-                        >
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* CTA Button - left aligned, reduced height */}
-              <div className="flex justify-start items-center mt-6">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="relative px-8 py-3 rounded-xl text-[16px] font-semibold text-white bg-[#6B4EFF] shadow-lg"
-                  onClick={handleStartConversation}
-                  disabled={isRequestingPermission}
-                >
-                  <motion.div
-                    animate={{
-                      boxShadow: [
-                        '0 0 0 0 rgba(107, 78, 255, 0.4)',
-                        '0 0 0 10px rgba(107, 78, 255, 0)',
-                      ],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }}
-                    className="absolute inset-0 rounded-xl"
-                  />
-                  {isRequestingPermission ? (
-                    <span className="flex items-center gap-2">
-                      <FaMicrophone className="animate-pulse" />
-                      Requesting microphone access...
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-2">
-                      <FaMicrophone />
-                      Talk to {currentCharacter.name}
-                    </span>
-                  )}
-                </motion.button>
-              </div>
-            </motion.div>
-          ) : startConversation ? (
-            <motion.div
-              key="conversation"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="w-full h-[calc(100vh-80px)] flex justify-center items-center"
-            >
-              {micPermission === 'denied' ? (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-center space-y-4"
-                >
-                  <FaMicrophoneSlash className="w-16 h-16 text-red-500 mx-auto" />
-                  <h2 className="text-[24px] font-semibold text-black">Microphone Access Required</h2>
-                  <p className="text-[16px] text-black">
-                    Please enable microphone access in your browser settings to start the conversation.
-                  </p>
-                  <button
-                    onClick={retryMicrophonePermission}
-                    className="px-6 py-3 rounded-lg bg-[#6B4EFF] text-white font-semibold hover:bg-[#6B4EFF]/90 transition-colors"
-                  >
-                    Try Again
-                  </button>
-                </motion.div>
-              ) : (
+                <FaArrowLeft size={32} />
+              </button>
+            </div>
+          )}
+          {/* Card or Iframe: fixed width */}
+          <div className="w-[340px] sm:w-[400px] md:w-[500px] mx-auto">
+            {startConversation && micPermission === 'granted' ? (
+              <div className="w-full h-[600px] bg-white rounded-xl overflow-hidden shadow-xl">
                 <iframe
                   ref={iframeRef}
-                  src={characterIframeMap[currentCharacter.id]}
-                  width="360"
-                  height="450"
-                  className="rounded-lg shadow-lg w-[360px] md:w-[720px] h-[450px] md:h-[720px]"
+                  src={characterIframeMap[currentAgent.id]}
+                  width="100%"
+                  height="100%"
                   frameBorder="0"
                   allow="microphone; camera; display-capture"
                 />
-              )}
-            </motion.div>
-          ) : (
-            <motion.div
-              key="feedback"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="backdrop-blur-lg rounded-2xl p-8 bg-white/30 border border-white/50"
-            >
-              <div className="space-y-8">
-                <h2 className="text-[24px] font-semibold text-black">
-                  Did you like this character?
-                </h2>
-                
-                <div className="flex gap-6">
-                  <button
-                    onClick={() => handleFeedback(true)}
-                    className={`flex-1 flex items-center justify-center gap-3 py-4 rounded-lg transition-colors font-semibold text-[24px] ${
-                      likedLastCharacter === true
-                        ? 'bg-green-500 text-white'
-                        : 'bg-white/50 text-black hover:bg-white/70'
-                    }`}
-                  >
-                    <FaThumbsUp className="w-6 h-6" />
-                    Yes
-                  </button>
-                  <button
-                    onClick={() => handleFeedback(false)}
-                    className={`flex-1 flex items-center justify-center gap-3 py-4 rounded-lg transition-colors font-semibold text-[24px] ${
-                      likedLastCharacter === false
-                        ? 'bg-red-500 text-white'
-                        : 'bg-white/50 text-black hover:bg-white/70'
-                    }`}
-                  >
-                    <FaThumbsDown className="w-6 h-6" />
-                    No
-                  </button>
-                </div>
-
-                <div>
-                  <label className="block text-[24px] font-semibold text-black mb-3">
-                    What kind of person do you want to talk to next?
-                  </label>
-                  <textarea
-                    value={userPreferenceQuery}
-                    onChange={(e) => setUserPreferenceQuery(e.target.value)}
-                    placeholder="I want a man who can listen unlike my boyfriend"
-                    className="w-full p-4 rounded-lg resize-none backdrop-blur-sm bg-white/50 border-white/50 text-black placeholder:text-gray-600 font-semibold text-[16px]"
-                    rows={3}
-                  />
-                </div>
-
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={matchNewCharacter}
-                  className="w-full bg-[#6B4EFF] text-white py-4 px-8 rounded-lg hover:bg-[#6B4EFF]/90 transition-colors text-[14px] font-semibold"
-                >
-                  Find Someone New →
-                </motion.button>
               </div>
-            </motion.div>
+            ) : currentAgent && (
+              <SwipeableAgentCard
+                agent={{
+                  ...currentAgent,
+                  image: characterImageMap[currentAgent.id],
+                }}
+                onSwipeLeft={goToNextAgent}
+                onSwipeRight={goToPrevAgent}
+                isTop={true}
+                animationProps={{
+                  initial: { opacity: 0, x: 120 },
+                  animate: { opacity: 1, x: 0 },
+                  exit: { opacity: 0, x: -120 },
+                  transition: { type: 'spring', stiffness: 300, damping: 30 },
+                }}
+                cardClassName="w-full"
+                onCTAClick={handleStartConversation}
+              />
+            )}
+          </div>
+          {/* Right Arrow: absolutely positioned */}
+          {!startConversation && (
+            <div className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10">
+              <button
+                className={`p-2 rounded-full bg-white/80 shadow hover:bg-indigo-100 transition-colors text-indigo-500 ${currentIndex === 3 ? 'invisible' : ''}`}
+                onClick={goToNextAgent}
+                aria-label="Next agent"
+                aria-hidden={currentIndex === 3}
+                tabIndex={currentIndex === 3 ? -1 : 0}
+                style={{ width: 48, height: 48 }}
+              >
+                <FaArrowRight size={32} />
+              </button>
+            </div>
           )}
-        </AnimatePresence>
+        </div>
       </div>
-      <FeedbackModal open={showFeedbackModal} onClose={() => setShowFeedbackModal(false)} onSubmit={handleFeedbackSubmit} />
+      {/* Microphone Permission UI */}
+      {micPermission === 'denied' && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-xl p-8 max-w-md mx-4">
+            <h2 className="text-xl font-bold mb-4">Microphone Access Required</h2>
+            <p className="mb-6 text-gray-600">
+              To have a conversation, we need access to your microphone. Please enable it in your browser settings.
+            </p>
+            <button
+              onClick={retryMicrophonePermission}
+              className="w-full py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Back Button - Only shown when iframe is active */}
+      {startConversation && micPermission === 'granted' && (
+        <button
+          onClick={handleExitConversation}
+          className="md:hidden fixed top-4 left-4 z-50 bg-[#2B176B] p-2 rounded-full shadow-lg border border-[#6B4EFF] text-white"
+          aria-label="Back to characters"
+        >
+          <FaArrowLeft className="w-6 h-6" />
+        </button>
+      )}
+
+      {/* Feedback Modal */}
+      <FeedbackModal 
+        open={showFeedbackModal} 
+        onClose={() => setShowFeedbackModal(false)} 
+        onSubmit={handleFeedbackSubmit} 
+      />
     </div>
   );
 } 
