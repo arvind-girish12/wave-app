@@ -16,14 +16,23 @@ const characterIframeMap = {
   1: "https://app.toughtongueai.com/embed/67f654c0f2dd89fc5d2d6043?bg=%23fdfffe&name=Mira&hidePoweredBy=true&skipPrecheck=true&buttonColor=%23c9d7f3&buttonIcon=call&scenarioNameColor=%23c2d3f5&buttonOutline=false&allowInteraction=true",
   2: "https://app.toughtongueai.com/embed/68355dcd12d822723ba97f50?bg=%23f2e9d4&skipPrecheck=true&buttonColor=%23fac342&buttonIcon=call&buttonOutline=false&scenarioNameColor=%23c9b382&buttonOutline=false&allowInteraction=true",
   3: "https://app.toughtongueai.com/embed/683722168d5a66f1aaac837b?bg=%23211641&skipPrecheck=true&buttonColor=%23be618c&buttonOutline=false&allowInteraction=true",
-  4: "https://app.toughtongueai.com/embed/68395a3fdb1f6ef1edd06a92?bg=%23fcfffa&skipPrecheck=true&buttonColor=%23a8b0bd&buttonOutline=false&scenarioNameColor=%23898b89&buttonOutline=false&allowInteraction=true"
+  4: "https://app.toughtongueai.com/embed/68395a3fdb1f6ef1edd06a92?bg=%23fcfffa&skipPrecheck=true&buttonColor=%23a8b0bd&buttonOutline=false&scenarioNameColor=%23898b89&buttonOutline=false&allowInteraction=true",
+  5: "https://app.toughtongueai.com/embed/68407514764a4fff3df0b851?bg=%23cae8d4&skipPrecheck=true&buttonColor=%23ffb72a&buttonOutline=false&scenarioNameColor=%233f9d67",
+  6: "https://app.toughtongueai.com/embed/683dc28a2698ebf16b09cdaa?bg=%23f3f0e2&hidePoweredBy=true&skipPrecheck=true&buttonColor=%23efd8af&buttonOutline=false&scenarioNameColor=%23b44f33",
+  7: "https://app.toughtongueai.com/embed/683feaf4764a4fff3df0b296?bg=%23bfcde8&skipPrecheck=true&buttonColor=%239aabdf&buttonOutline=false",
+  8: "https://app.toughtongueai.com/embed/683eef74f499ca9b71d5ac8a?bg=%23d0d3dd&skipPrecheck=true&buttonColor=%23b6bac9&buttonOutline=false"
 };
+
 
 const characterImageMap = {
   1: '/mira.jpg',
   2: '/novajames.gif',
   3: '/seraphina.jpg',
   4: '/maccallan.jpg',
+  5: '/zenny.png',
+  6: '/reed.png',
+  7: '/arjun.png',
+  8: '/lucky.png'
 };
 
 export default function CharacterReveal() {
