@@ -172,7 +172,7 @@ export default function Login() {
         {/* CTA */}
         <button
           onClick={handleGoogleLogin}
-          className="mb-24 md:mb-0 w-full py-4 bg-sky-500 text-white text-base font-bold rounded-xl shadow-lg hover:bg-sky-600 transition focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2"
+          className="mb-24 md:mb-0 w-full py-4 cta-color text-white text-base font-bold rounded-xl shadow-lg hover:bg-sky-600 transition focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2"
         >
           Talk to your AI friend, now
         </button>

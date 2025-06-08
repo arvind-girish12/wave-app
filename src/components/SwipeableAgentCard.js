@@ -51,7 +51,7 @@ export default function SwipeableAgentCard({ agent, onSwipeLeft, onSwipeRight, o
           </div>
           <div className="w-full mt-4">
             <button
-              className="w-full py-3 rounded-xl bg-sky-500 text-white font-bold text-lg shadow-lg hover:bg-sky-600 transition-all mb-2"
+              className="w-full py-3 rounded-xl cta-color text-white font-bold text-lg shadow-lg hover:bg-sky-600 transition-all mb-2"
               onClick={() => onCTAClick(agent)}
             >
               Talk to {agent.name}

@@ -202,3 +202,8 @@ body, .light-mode, .dark-mode {
   --tw-text-opacity: 1;
   color: rgb(100 111 144 / var(--tw-text-opacity)) !important;
 }
+
+.cta-color {
+  background-color: slateblue;
+}
+
