@@ -22,7 +22,8 @@ const characterIframeMap = {
   5: "https://app.toughtongueai.com/embed/68407514764a4fff3df0b851?bg=%23cae8d4&skipPrecheck=true&buttonColor=%23ffb72a&buttonOutline=false&scenarioNameColor=%233f9d67",
   6: "https://app.toughtongueai.com/embed/683dc28a2698ebf16b09cdaa?bg=%23f3f0e2&hidePoweredBy=true&skipPrecheck=true&buttonColor=%23efd8af&buttonOutline=false&scenarioNameColor=%23b44f33",
   7: "https://app.toughtongueai.com/embed/683feaf4764a4fff3df0b296?bg=%23bfcde8&skipPrecheck=true&buttonColor=%239aabdf&buttonOutline=false",
-  8: "https://app.toughtongueai.com/embed/683eef74f499ca9b71d5ac8a?bg=%23d0d3dd&skipPrecheck=true&buttonColor=%23b6bac9&buttonOutline=false"
+  8: "https://app.toughtongueai.com/embed/683eef74f499ca9b71d5ac8a?bg=%23d0d3dd&skipPrecheck=true&buttonColor=%23b6bac9&buttonOutline=false",
+  9: "https://app.toughtongueai.com/embed/6841469c764a4fff3df0baba?bg=%23bcd1e1&hidePoweredBy=true&skipPrecheck=true&tools=true&buttonColor=%23e2d3d0&buttonOutline=false&scenarioNameColor=%23211211"
 };
 
 

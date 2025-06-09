@@ -61,7 +61,15 @@ I’m Lucky. Smoked For 15 Years, Quit 5 Ago. It Was Messy But Worth It.
 
 I’m Not Here To Preach, Just Share What Worked For Me.
 
-Thinking About Quitting Too? I’ve Got Your Back.`
+Thinking About Quitting Too? I’ve Got Your Back.`,
+
+  9: `Namaste beta :)
+
+I’m Dadu, 84, From Jaipur — Ex-Engineer, Chai Expert, And Part-Time Stock Trader.
+
+I Raised My Grandkids On Bedtime Stories And Big Hugs, And I Believe In Equal Work And Full Independence.
+
+Here To Share Comfort, Wisdom, And A Kahani—Kahani Sunoge?`
 };
 
 export default characterDescriptions;

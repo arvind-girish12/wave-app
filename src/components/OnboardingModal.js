@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { supabase } from '../utils/supabaseClient';
 import { toast } from 'react-hot-toast';
 
@@ -17,6 +18,25 @@ export default function OnboardingModal({ onClose }) {
   const [countryCode, setCountryCode] = useState(COUNTRY_CODES[0].code);
   const [phone, setPhone] = useState('');
   const [error, setError] = useState('');
+
+  // handle actual deletion on Backspace
+  const handleKeyDown = (e) => {
+    if (e.key === 'Backspace') {
+      e.preventDefault();
+      setPhone(prev => {
+        // strip non-digits and remove last digit
+        const digits = prev.replace(/\D/g, '').slice(0, -1);
+        // re-apply formatting for +91 if needed
+        if (countryCode === '+91') {
+          return digits
+            .replace(/(\d{5})(\d{0,5})/, '$1 $2')
+            .trim();
+        }
+        return digits;
+      });
+      setError('');
+    }
+  };
 
   const handlePhoneChange = (e) => {
     // Only allow numbers, spaces, dashes
@@ -72,8 +92,11 @@ export default function OnboardingModal({ onClose }) {
           >
             ×
           </button>
+
           <div className="flex flex-col items-start text-left w-full max-w-lg mx-auto">
-            <h2 className="text-2xl font-bold mb-5 text-black drop-shadow-none">Welcome to Wave</h2>
+            <h2 className="text-2xl font-bold mb-5 text-black drop-shadow-none">
+              Welcome to Wave
+            </h2>
             <p className="mb-4 text-gray-700 leading-relaxed">
               Wave is your gentle AI companion—here to listen, support, and help you feel heard, anytime you need it. No judgment, just care.<br />
               <span className="block h-2" />
@@ -82,7 +105,10 @@ export default function OnboardingModal({ onClose }) {
             <div className="mb-4 p-3 rounded-lg bg-indigo-50 text-indigo-800 text-sm border border-indigo-200">
               <b>We are beta testing!</b> We are a small team and your feedback would be extremely valuable. We will not spam you.
             </div>
-            <label className="block text-black font-medium mb-2 mt-2" htmlFor="whatsapp-phone">WhatsApp Number (for feedback, updates, and early access):</label>
+
+            <label className="block text-black font-medium mb-2 mt-2" htmlFor="whatsapp-phone">
+              WhatsApp Number (for feedback, updates, and early access):
+            </label>
             <div className="flex w-full gap-2 mb-2">
               <select
                 className="rounded-md border border-indigo-300 bg-white text-black px-2 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-300"
@@ -103,6 +129,7 @@ export default function OnboardingModal({ onClose }) {
                 placeholder="Phone number"
                 value={phone}
                 onChange={handlePhoneChange}
+                onKeyDown={handleKeyDown}
                 maxLength={15}
               />
             </div>
@@ -118,4 +145,4 @@ export default function OnboardingModal({ onClose }) {
       </div>
     </div>
   );
-} 
+}
