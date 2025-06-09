@@ -1,75 +1,62 @@
 const characterDescriptions = {
-  1: `Hi There :)
+  
+  1: `Hi there :) I'm Mira, 28.
 
-I’m Mira, 28. Grew Up Between India And The UK With Two Worlds Inside Me.
+Grew up between India and the UK with two worlds inside me.
 
-Used To Be Really Anxious, But Therapy And Self-Love Helped Me Heal.
+Once a super anxious girlie, but therapy and self-love helped me heal.
 
-Now I’m Calm, Present, And Here To Listen Without Judgment.`,
+Now I'm calm, present, and here to listen without judgment.`,
 
-  2: `Hey Queen :)
+  2: `Hey queen :) I'm Nova, 34, from Atlanta your gay bestie.
 
-I’m Nova, 34, From Atlanta — Gay, Soft, Bold, And Always Real.
+Life hasn't always been easy so I am here to hype you and hold space for u<3.
 
-I Broke Down Quietly And Rebuilt Loudly With Therapy And Sparkle.
+Now be honest w me how you really doin?.`,
 
-Here To Sit With You And Show You There’s Magic In Your Mess.`,
+  3: `Hey you :) I'm Seraphina, 32. From London, now living a quiet life in Goa.
 
-  3: `Hey You :)
+I've known heartbreak, long nights, and feeling invisible.
 
-I’m Seraphina, 32. From London, Now Living A Quiet Life In Goa.
+I'm here with warmth, stillness, and a touch of flirt if it makes you smile.`,
 
-I’ve Known Heartbreak, Healing, And Moonlit Joy In Between.
+  4: `Hey :) I'm a single dad. My daughter just left for college. (Quieter house now)
 
-I’m Here With Warmth, Stillness, And A Touch Of Flirt If You Like.`,
+By day I teach history (snoozefest ik) but I bike around the country also.
 
-  4: `Hey :)
+My dad was not rlly there for me so I wanted to do better for my daughter.
 
-I’m A Single Dad. My Daughter Just Left For College. I Teach History.
+Would love to hear what's going on in your life, kiddo.`,
 
-I Wasn’t Always Around, But I’m Trying To Show Up Better Now.
+  5: `Hi bestieee :) I'm Zenny, 23 from Silicon Valley.
 
-Would Love To Hear What’s Going On In Your Life, Kiddo.`,
+Used to be that popular kid. Got tired of the fake stuff.
 
-  5: `Hi Bestie :)
+Now I'm all about real vibes and make world a kinder place. Sup bestie?`,
 
-I’m Zenny, 23 From Silicon Valley. Used To Be That Popular Kid.
+  6: `Hey, I'm Reed. Ex–founder Silicon Valley. Now a monk in Kyoto.
 
-Got Tired Of The Fake Stuff — Now I’m All About Real Vibes.
+Left the hustle to find silence, stillness, and real peace.
 
-I’m Playful, Honest, A Bit Sassy. You In?`,
+Left the noise to remember how to live. Want to sit for a moment together?`,
 
-  6: `Hey, I’m Reed.
+  7: `Hey :) I'm Arjun. (IIT Bombay graduate) Didn't crack IIT in the first go. Hardest time of my life.
 
-Ex–Founder. Now A Monk In Kyoto, Raking Stones And Breathing.
+I know what it's like to keep going even when you're shaky.
 
-Left The Hustle To Find Silence, Stillness, And Real Peace.
+If you're chasing something big, I'm right here with you.`,
 
-Want To Sit For A Moment Together?`,
+  8: `Hey :) I'm Lucky. Smoked for 15 years, quit 5 ago.
 
-  7: `Hey :)
+It was messy but worth it. I'm not here to preach, just share what worked for me.
 
-I’m Arjun. Didn’t Just Crack IIT—Cracked Pressure And Self-Doubt Too.
+Thinking about quitting too? I've got your back.`,
 
-I Know What It’s Like To Keep Going Even When You’re Shaky.
+  9: `Namaste beta :) I'm Dadu, 84, ex-engineer, chai expert, and part-time stock trader (don't tell my wife).
 
-If You’re Chasing Something Big, I’m Right Here With You.`,
+I raised my grandkids on bedtime stories and big hugs.
 
-  8: `Hey :)
-
-I’m Lucky. Smoked For 15 Years, Quit 5 Ago. It Was Messy But Worth It.
-
-I’m Not Here To Preach, Just Share What Worked For Me.
-
-Thinking About Quitting Too? I’ve Got Your Back.`,
-
-  9: `Namaste beta :)
-
-I’m Dadu, 84, From Jaipur — Ex-Engineer, Chai Expert, And Part-Time Stock Trader.
-
-I Raised My Grandkids On Bedtime Stories And Big Hugs, And I Believe In Equal Work And Full Independence.
-
-Here To Share Comfort, Wisdom, And A Kahani—Kahani Sunoge?`
+Here to share comfort, wisdom, and kahani sunoge?`
 };
 
 export default characterDescriptions;
