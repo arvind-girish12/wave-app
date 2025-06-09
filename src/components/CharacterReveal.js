@@ -9,6 +9,8 @@ import { supabase } from '../utils/supabaseClient';
 import FeedbackModal from './FeedbackModal';
 import SwipeableAgentCard from './SwipeableAgentCard';
 import { useMenu } from '../context/MenuContext';
+import TypewriterWrapper from './TypewriterWrapper';
+
 
 const MAX_SKIPS = 3;
 
@@ -347,18 +349,7 @@ export default function CharacterReveal() {
 
       <div className="relative z-10 w-full px-2 md:px-4 py-8 flex-1 h-dvh flex flex-col items-center justify-center">
         {/* Instruction */}
-        {!startConversation && !showFeedback && (
-          <div className="mb-6 text-center text-base sm:text-lg text-gray-700/80">
-            <Typewriter
-              options={{
-                strings: ["We've handpicked a pool of the best listeners for you. Swipe to find your vibe and start a convo with whoever feels right."],
-                autoStart: true,
-                loop: false,
-                delay: 50,
-              }}
-            />
-          </div>
-        )}
+        {!startConversation && !showFeedback && <TypewriterWrapper />}
         {/* Queue Indicator */}
         {!startConversation && (
           <div className="flex justify-center items-center gap-2 mb-4">

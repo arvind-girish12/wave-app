@@ -2,6 +2,8 @@ import React from 'react';
 import { useSwipeable } from 'react-swipeable';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import characterDescriptions from '../utils/characterDescriptions';
+
 
 export default function SwipeableAgentCard({ agent, onSwipeLeft, onSwipeRight, onCTAClick, isTop, animationProps, cardClassName }) {
   const handlers = useSwipeable({
@@ -28,7 +30,7 @@ export default function SwipeableAgentCard({ agent, onSwipeLeft, onSwipeRight, o
           animate={anim.animate}
           exit={anim.exit}
           transition={anim.transition}
-          className={`relative bg-white/80 rounded-2xl shadow-xl flex flex-col justify-between items-center border border-gray-200 w-[340px] sm:w-[400px] md:w-[500px] h-[540px] md:h-[600px] mx-auto p-6 md:p-10 overflow-y-auto ${cardClassName || ''}`}
+          className={`relative bg-white/80 rounded-2xl shadow-xl flex flex-col justify-between items-center border border-gray-200 w-[340px] sm:w-[400px] md:w-[500px] h-[600px] md:h-[600px] mx-auto p-6 md:p-10 overflow-y-auto ${cardClassName || ''}`}
           style={{ touchAction: 'pan-y' }}
         >
           <div className="flex-1 w-full flex flex-col items-center">
@@ -44,10 +46,12 @@ export default function SwipeableAgentCard({ agent, onSwipeLeft, onSwipeRight, o
             {agent.voice_style && (
               <div className="text-indigo-700 italic text-sm mb-2 text-left w-full">Voice style: {agent.voice_style}</div>
             )}
-            <div className="text-gray-800 font-medium text-left w-full mb-3">{agent.description}</div>
-            {agent.childhood && agent.childhood.length > 0 && (
+            <div className="text-gray-600 text-sm text-left w-full mb-3 whitespace-pre-wrap">
+               {characterDescriptions[agent.id]}
+            </div>
+            {/* {agent.childhood && agent.childhood.length > 0 && (
               <div className="text-gray-600 text-sm mb-3 text-left w-full">"{agent.childhood[0]}"</div>
-            )}
+            )} */}
           </div>
           <div className="w-full mt-4">
             <button
