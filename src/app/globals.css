@@ -133,12 +133,12 @@ body {
 .lato-onboarding {
   font-family: 'Exo 2', sans-serif !important;
 }
-.lato-onboarding h2 {
+/* .lato-onboarding h2 {
   font-size: 2.25rem !important;
-}
-.lato-onboarding p, .lato-onboarding button {
+} */
+/* .lato-onboarding button {
   font-size: 1.25rem;
-}
+} */
 
 @media (max-width: 640px) {
   .onboarding-modal-card {
@@ -146,12 +146,12 @@ body {
     border-radius: 1rem !important;
     padding: 1.25rem !important;
   }
-  .lato-onboarding h2 {
+  /* .lato-onboarding h2 {
     font-size: 1.2rem !important;
   }
   .lato-onboarding p, .lato-onboarding button {
     font-size: 0.95rem;
-  }
+  } */
 }
 
 /* Theme mode classes for dashboard */

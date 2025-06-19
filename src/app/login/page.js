@@ -5,9 +5,14 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { supabase } from "../../utils/supabaseClient";
 import { shouldBypassAuthClient } from "../../utils/environment";
+import { trackVisit } from "../../utils/trackVisits";
 
 export default function Login() {
   const router = useRouter();
+
+  useEffect(() => {
+    trackVisit("login_visits");
+  }, []);
 
   useEffect(() => {
     if (shouldBypassAuthClient()) {
@@ -48,7 +53,7 @@ export default function Login() {
 
         {/* Logo */}
         <div className="flex justify-start mb-4">
-          <Image src="/logo.png" alt="wave logo" width={80} height={24} />
+          <Image src="/logo.png" alt="wave logo" width={120} height={24} />
         </div>
 
         {/* Card */}

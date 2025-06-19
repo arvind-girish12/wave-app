@@ -17,8 +17,8 @@ const navSections = [
     title: 'Account',
     items: [
       { icon: <FaCog />, label: 'Settings', href: '/settings' },
-      { icon: <FaQuestionCircle />, label: 'Help', href: '/help' },
-      { icon: <FaSignOutAlt />, label: 'Log out', href: '/logout', isLogout: true },
+      { icon: <FaQuestionCircle />, label: 'Help', href: '/help' }
+      // { icon: <FaSignOutAlt />, label: 'Log out', href: '/logout', isLogout: true },
     ],
   },
 ];

@@ -10,9 +10,7 @@ import FeedbackModal from './FeedbackModal';
 import SwipeableAgentCard from './SwipeableAgentCard';
 import { useMenu } from '../context/MenuContext';
 import TypewriterWrapper from './TypewriterWrapper';
-
-
-const MAX_SKIPS = 3;
+import { trackVisitWithEmail } from '../utils/trackVisits';
 
 const characterIframeMap = {
   1: "https://app.toughtongueai.com/embed/67f654c0f2dd89fc5d2d6043?bg=%23fdfffe&name=Mira&hidePoweredBy=true&skipPrecheck=true&buttonColor=%23c9d7f3&buttonIcon=call&scenarioNameColor=%23c2d3f5&buttonOutline=false&allowInteraction=true",
@@ -25,7 +23,6 @@ const characterIframeMap = {
   8: "https://app.toughtongueai.com/embed/683eef74f499ca9b71d5ac8a?bg=%23d0d3dd&skipPrecheck=true&buttonColor=%23b6bac9&buttonOutline=false",
   9: "https://app.toughtongueai.com/embed/6841469c764a4fff3df0baba?bg=%23bcd1e1&hidePoweredBy=true&skipPrecheck=true&tools=true&buttonColor=%23e2d3d0&buttonOutline=false&scenarioNameColor=%23211211"
 };
-
 
 const characterImageMap = {
   1: '/mira.jpg',
@@ -43,7 +40,6 @@ export default function CharacterReveal() {
   const { setIsMenuVisible } = useMenu();
   const [loading, setLoading] = useState(true);
   const [currentCharacter, setCurrentCharacter] = useState(null);
-  const [skipsRemaining, setSkipsRemaining] = useState(MAX_SKIPS);
   const [showFeedback, setShowFeedback] = useState(false);
   const [userPreferenceQuery, setUserPreferenceQuery] = useState('');
   const [likedLastCharacter, setLikedLastCharacter] = useState(null);
@@ -69,10 +65,29 @@ export default function CharacterReveal() {
     async function fetchCharacters() {
       const res = await fetch('/api/characters');
       const data = await res.json();
-      setCharacters([...data].sort(() => Math.random() - 0.5));
+      
       if (data && data.length) {
-        setCurrentCharacter(data[Math.floor(Math.random() * data.length)]);
+        // Separate characters into groups
+        const priorityGroup = data.filter(char => [4, 5, 6].includes(char.id)); // IDs 4, 5, 6
+        const otherGroup = data.filter(char => [1, 2, 3, 7, 8, 9].includes(char.id)); // IDs 1, 2, 3, 7, 8, 9
+        
+        // Shuffle the other group
+        const shuffledOtherGroup = [...otherGroup].sort(() => Math.random() - 0.5);
+        
+        // Combine: First 3 are always 4,5,6 (in order), then shuffled others
+        const orderedCharacters = [
+          ...priorityGroup, // First 3 positions: IDs 4, 5, 6
+          ...shuffledOtherGroup // Remaining 6 positions: shuffled IDs 1, 2, 3, 7, 8, 9
+        ];
+        
+        setCharacters(orderedCharacters);
+        
+        // Set the first character (ID 4) as current
+        if (orderedCharacters.length > 0) {
+          setCurrentCharacter(orderedCharacters[0]);
+        }
       }
+      trackVisitWithEmail("dashboard_visits");
     }
     fetchCharacters();
   }, []);
@@ -123,6 +138,7 @@ export default function CharacterReveal() {
             sessionInfoRef.current.characterId = currentCharacter?.id;
             fetchUserEmail(); // don't await, just call to set ref as soon as possible
             requestWakeLock();
+            trackVisitWithEmail("character_visits");
             break;
           case 'onStop':
             console.log('[CharacterReveal] onStop event received:', data);
@@ -154,6 +170,7 @@ export default function CharacterReveal() {
               }
             }, 10000);
             releaseWakeLock();
+            trackVisitWithEmail("feedback_visits");
             break;
         }
       }
@@ -174,9 +191,9 @@ export default function CharacterReveal() {
     }
   }, [characters]);
 
-  // Navigation logic: move to next/prev agent (0-3)
+  // Navigation logic: move to next/prev agent (0-8 for all 9 characters)
   const goToNextAgent = () => {
-    setCurrentIndex(idx => Math.min(idx + 1, 3));
+    setCurrentIndex(idx => Math.min(idx + 1, characters.length - 1));
   };
   const goToPrevAgent = () => {
     setCurrentIndex(idx => Math.max(idx - 1, 0));
@@ -210,50 +227,8 @@ export default function CharacterReveal() {
     requestMicrophonePermission();
   };
 
-  const handleSkip = () => {
-    if (skipsRemaining > 0) {
-      setShowFeedback(true);
-    }
-  };
-
   const handleFeedback = (liked) => {
     setLikedLastCharacter(liked);
-  };
-
-  const matchNewCharacter = () => {
-    setShowFeedback(false);
-    setLoading(true);
-    setSkipsRemaining(prev => prev - 1);
-    // Remove current character from the list
-    setCharacters(prevChars => prevChars.filter(c => c.id !== currentCharacter.id));
-    // Simulate new character loading
-    setTimeout(() => {
-      setLoading(false);
-      setCurrentCharacter(prev => {
-        // Pick a new character from the updated list
-        const available = characters.filter(c => c.id !== currentCharacter.id);
-        return available[Math.floor(Math.random() * available.length)];
-      });
-    }, 2500);
-  };
-
-  const skipCharacter = () => {
-    if (characters.length < 2 || skipsRemaining <= 0) return;
-    // Remove current character from the list
-    const updatedCharacters = characters.filter(c => c.id !== currentCharacter.id);
-    setCharacters(updatedCharacters);
-    // Pick a new character from the updated list
-    const next = updatedCharacters[Math.floor(Math.random() * updatedCharacters.length)];
-    setCurrentCharacter(next);
-    setShowFeedback(false);
-    setStartConversation(false);
-    setSkipsRemaining(prev => prev - 1);
-  };
-
-  // Updated matchNewCharacter to prevent left swipe on last agent
-  const matchNewCharacterSafe = () => {
-    if (currentIndex >= 3) return; // Prevent swipe if on last agent
-    matchNewCharacter();
   };
 
   // Feedback modal submit handler
@@ -351,14 +326,16 @@ export default function CharacterReveal() {
       <div className="relative z-10 w-full px-2 md:px-4 py-8 flex-1 h-dvh flex flex-col items-center justify-center">
         {/* Instruction */}
         {!startConversation && !showFeedback && <TypewriterWrapper />}
-        {/* Queue Indicator */}
+        
+        {/* Queue Indicator - Now shows 9 dots for all characters */}
         {!startConversation && (
           <div className="flex justify-center items-center gap-2 mb-4">
-            {[0,1,2,3].map(idx => (
+            {characters.map((_, idx) => (
               <span key={idx} className={`w-2 h-2 rounded-full ${idx === currentIndex ? 'bg-indigo-500' : 'bg-gray-300'}`}></span>
             ))}
           </div>
         )}
+        
         {/* Arrow Controls + Swipeable Card or Iframe */}
         <div className="relative flex items-center justify-center w-full max-w-none mx-auto gap-0" style={{ minHeight: '1px' }}>
           {/* Left Arrow: absolutely positioned */}
@@ -376,6 +353,7 @@ export default function CharacterReveal() {
               </button>
             </div>
           )}
+          
           {/* Card or Iframe: fixed width */}
           <div className="w-[340px] sm:w-[400px] md:w-[500px] mx-auto">
             {startConversation && micPermission === 'granted' ? (
@@ -409,15 +387,16 @@ export default function CharacterReveal() {
               />
             )}
           </div>
+          
           {/* Right Arrow: absolutely positioned */}
           {!startConversation && (
             <div className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-10">
               <button
-                className={`p-2 rounded-full bg-white/80 shadow hover:bg-indigo-100 transition-colors text-indigo-500 ${currentIndex === 3 ? 'invisible' : ''}`}
+                className={`p-2 rounded-full bg-white/80 shadow hover:bg-indigo-100 transition-colors text-indigo-500 ${currentIndex === characters.length - 1 ? 'invisible' : ''}`}
                 onClick={goToNextAgent}
                 aria-label="Next agent"
-                aria-hidden={currentIndex === 3}
-                tabIndex={currentIndex === 3 ? -1 : 0}
+                aria-hidden={currentIndex === characters.length - 1}
+                tabIndex={currentIndex === characters.length - 1 ? -1 : 0}
                 style={{ width: 48, height: 48 }}
               >
                 <FaArrowRight size={32} />
@@ -426,6 +405,7 @@ export default function CharacterReveal() {
           )}
         </div>
       </div>
+      
       {/* Microphone Permission UI */}
       {micPermission === 'denied' && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -463,4 +443,4 @@ export default function CharacterReveal() {
       />
     </div>
   );
-} 
+}
