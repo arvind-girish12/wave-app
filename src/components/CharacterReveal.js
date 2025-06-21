@@ -145,6 +145,11 @@ export default function CharacterReveal() {
             sessionInfoRef.current.endTime = Date.now();
             const durationSeconds = Math.floor((sessionInfoRef.current.endTime - sessionInfoRef.current.startTime) / 1000);
             const userEmail = sessionInfoRef.current.userEmail || 'localhost';
+            
+            // Get user data from localStorage
+            const userName = localStorage.getItem('userName') || null;
+            const userPhone = localStorage.getItem('userPhone') || null;
+            
             const payload = {
               user_email: userEmail,
               character_id: sessionInfoRef.current.characterId,
@@ -152,6 +157,8 @@ export default function CharacterReveal() {
               started_at: new Date(sessionInfoRef.current.startTime).toISOString(),
               ended_at: new Date(sessionInfoRef.current.endTime).toISOString(),
               duration_seconds: durationSeconds,
+              user_name: userName,
+              user_phone: userPhone,
             };
             console.log('[CharacterReveal] Scheduling API call to /api/character-session in 10s with payload:', payload);
             sessionInfoRef.current.timeoutId = setTimeout(async () => {

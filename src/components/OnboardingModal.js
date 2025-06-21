@@ -184,6 +184,10 @@ export default function OnboardingModal({ onClose }) {
         return;
       }
 
+      // Save phone number to localStorage
+      localStorage.setItem('userPhone', fullPhone);
+      localStorage.setItem('userName', name);
+
       toast.success('Welcome to Wave!');
       onClose();
     } catch (error) {

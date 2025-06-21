@@ -5,12 +5,12 @@ import { cookies } from 'next/headers';
 export async function POST(req) {
   const supabase = createRouteHandlerClient({ cookies });
   const body = await req.json();
-  const { user_email, character_id, session_id, started_at, ended_at, duration_seconds } = body;
+  const { user_email, character_id, session_id, started_at, ended_at, duration_seconds, user_name, user_phone } = body;
 
   const { data, error } = await supabase
     .from('character_sessions')
     .insert([
-      { user_email, character_id, session_id, started_at, ended_at, duration_seconds }
+      { user_email, character_id, session_id, started_at, ended_at, duration_seconds, user_name, user_phone }
     ]);
 
   if (error) {

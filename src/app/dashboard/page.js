@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import CharacterReveal from '../../components/CharacterReveal';
 import OnboardingModal from '../../components/OnboardingModal';
 
-const SHOW_ONBOARDING_KEY = 'showOnboardingKey';
+const SHOW_ONBOARDING_KEY = 'showOnboardingKey2';
 
 export default function Dashboard() {
   const [showOnboarding, setShowOnboarding] = useState(false);
