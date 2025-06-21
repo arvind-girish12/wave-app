@@ -151,7 +151,7 @@ export default function CharacterReveal() {
             const userPhone = localStorage.getItem('userPhone') || null;
             
             const payload = {
-              user_email: userEmail,
+              user_email: 'not_authenticated',
               character_id: sessionInfoRef.current.characterId,
               session_id: sessionInfoRef.current.sessionIdText,
               started_at: new Date(sessionInfoRef.current.startTime).toISOString(),
