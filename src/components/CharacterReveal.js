@@ -11,6 +11,7 @@ import SwipeableAgentCard from './SwipeableAgentCard';
 import { useMenu } from '../context/MenuContext';
 import TypewriterWrapper from './TypewriterWrapper';
 import { trackVisitWithEmail } from '../utils/trackVisits';
+import { getCharacterId } from '../utils/characterNames';
 
 const characterIframeMap = {
   1: "https://app.toughtongueai.com/embed/67f654c0f2dd89fc5d2d6043?bg=%23fdfffe&name=Mira&hidePoweredBy=true&skipPrecheck=true&buttonColor=%23c9d7f3&buttonIcon=call&scenarioNameColor=%23c2d3f5&buttonOutline=false&allowInteraction=true",
@@ -82,7 +83,28 @@ export default function CharacterReveal() {
         
         setCharacters(orderedCharacters);
         
-        // Set the first character (ID 4) as current
+        // Check for character parameter in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const characterParam = urlParams.get('character');
+        
+        if (characterParam) {
+          const characterId = getCharacterId(characterParam);
+          if (characterId) {
+            // Find the character in the ordered list
+            const characterIndex = orderedCharacters.findIndex(char => char.id === characterId);
+            if (characterIndex !== -1) {
+              setCurrentIndex(characterIndex);
+              setCurrentCharacter(orderedCharacters[characterIndex]);
+              // Clean up URL
+              const newUrl = new URL(window.location);
+              newUrl.searchParams.delete('character');
+              window.history.replaceState({}, '', newUrl);
+              return;
+            }
+          }
+        }
+        
+        // Set the first character (ID 4) as current if no character parameter
         if (orderedCharacters.length > 0) {
           setCurrentCharacter(orderedCharacters[0]);
         }

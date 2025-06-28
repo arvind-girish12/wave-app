@@ -1,8 +1,10 @@
 import React from 'react';
 import { useSwipeable } from 'react-swipeable';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+import { FaArrowLeft, FaArrowRight, FaShare } from 'react-icons/fa';
 import characterDescriptions from '../utils/characterDescriptions';
+import { generateShareUrl } from '../utils/characterNames';
+import { toast } from 'react-hot-toast';
 
 
 export default function SwipeableAgentCard({ agent, onSwipeLeft, onSwipeRight, onCTAClick, isTop, animationProps, cardClassName }) {
@@ -21,6 +23,35 @@ export default function SwipeableAgentCard({ agent, onSwipeLeft, onSwipeRight, o
   };
   const anim = animationProps || defaultAnimation;
 
+  const handleShare = async () => {
+    const characterName = generateShareUrl(agent.name.toLowerCase());
+    
+    try {
+      if (navigator.share) {
+        // Use native sharing on mobile
+        await navigator.share({
+          title: `Talk to ${agent.name} on Wave`,
+          text: `Check out ${agent.name} on Wave - your AI companion for meaningful conversations!`,
+          url: characterName,
+        });
+      } else {
+        // Fallback: copy to clipboard
+        await navigator.clipboard.writeText(characterName);
+        toast.success('Link copied to clipboard!');
+      }
+    } catch (error) {
+      console.error('Error sharing:', error);
+      // Fallback: copy to clipboard
+      try {
+        await navigator.clipboard.writeText(characterName);
+        toast.success('Link copied to clipboard!');
+      } catch (clipboardError) {
+        console.error('Error copying to clipboard:', clipboardError);
+        toast.error('Failed to share link');
+      }
+    }
+  };
+
   return (
     <AnimatePresence>
       {isTop && (
@@ -33,6 +64,15 @@ export default function SwipeableAgentCard({ agent, onSwipeLeft, onSwipeRight, o
           className={`relative bg-white/80 rounded-2xl shadow-xl flex flex-col justify-between items-center border border-gray-200 w-[340px] sm:w-[400px] md:w-[500px] h-[600px] md:h-[600px] mx-auto p-6 md:p-10 overflow-y-auto ${cardClassName || ''}`}
           style={{ touchAction: 'pan-y' }}
         >
+          {/* Share Button - Desktop Only */}
+          <button
+            onClick={handleShare}
+            className="absolute top-4 right-4 p-2 rounded-full bg-white/80 shadow-md hover:bg-indigo-100 transition-colors text-indigo-500 z-10 hidden md:flex"
+            aria-label="Share character"
+          >
+            <FaShare size={16} />
+          </button>
+
           <div className="flex-1 w-full flex flex-col items-center">
             <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#6B4EFF] to-[#F7BFA3] flex items-center justify-center overflow-hidden mb-5">
               {agent.image ? (
@@ -60,6 +100,16 @@ export default function SwipeableAgentCard({ agent, onSwipeLeft, onSwipeRight, o
             >
               Talk to {agent.name}
             </button>
+            
+            {/* Mobile Share Button */}
+            <button
+              onClick={handleShare}
+              className="w-full py-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors text-gray-700 font-medium text-sm md:hidden flex items-center justify-center gap-2"
+            >
+              <FaShare size={14} />
+              Share {agent.name}
+            </button>
+            
             {/* Swipe hint */}
             <div className="flex items-center justify-center gap-2 mt-2 text-gray-400 text-base select-none md:hidden">
               <FaArrowLeft />
