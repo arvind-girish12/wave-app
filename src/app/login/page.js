@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { supabase } from "../../utils/supabaseClient";
 import { shouldBypassAuthClient } from "../../utils/environment";
@@ -9,6 +9,7 @@ import { trackVisit } from "../../utils/trackVisits";
 
 export default function Login() {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     trackVisit("login_visits");
@@ -16,14 +17,18 @@ export default function Login() {
 
   useEffect(() => {
     if (shouldBypassAuthClient()) {
-      router.push("/dashboard");
+      const characterParam = searchParams.get('character');
+      const dashboardUrl = characterParam ? `/dashboard?character=${characterParam}` : '/dashboard';
+      router.push(dashboardUrl);
     }
-  }, [router]);
+  }, [router, searchParams]);
 
   const handleGoogleLogin = async () => {
     try {
       if (shouldBypassAuthClient()) {
-        router.push("/dashboard");
+        const characterParam = searchParams.get('character');
+        const dashboardUrl = characterParam ? `/dashboard?character=${characterParam}` : '/dashboard';
+        router.push(dashboardUrl);
         return;
       }
       const redirectUrl =
@@ -139,7 +144,7 @@ export default function Login() {
             </div>
           </div>
 
-          {/* “We care” section */}
+          {/* "We care" section */}
           <div className="flex items-center justify-between mb-8">
             <div>
               <h3 className="text-base font-bold text-black">

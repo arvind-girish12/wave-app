@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaArrowLeft, FaArrowRight, FaShare } from 'react-icons/fa';
+import { FaArrowLeft, FaArrowRight, FaShare, FaCopy, FaTimes } from 'react-icons/fa';
 import characterDescriptions from '../utils/characterDescriptions';
 import { generateShareUrl } from '../utils/characterNames';
 import { toast } from 'react-hot-toast';
 
 
 export default function SwipeableAgentCard({ agent, onSwipeLeft, onSwipeRight, onCTAClick, isTop, animationProps, cardClassName }) {
+  const [showSharePopover, setShowSharePopover] = useState(false);
+  const [shareUrl, setShareUrl] = useState('');
+  const popoverRef = useRef(null);
+  
   const handlers = useSwipeable({
     onSwipedLeft: () => onSwipeLeft(agent),
     onSwipedRight: () => onSwipeRight(agent),
@@ -23,32 +27,69 @@ export default function SwipeableAgentCard({ agent, onSwipeLeft, onSwipeRight, o
   };
   const anim = animationProps || defaultAnimation;
 
+  // Handle clicking outside popover to close it
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (popoverRef.current && !popoverRef.current.contains(event.target)) {
+        setShowSharePopover(false);
+      }
+    }
+
+    if (showSharePopover) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showSharePopover]);
+
   const handleShare = async () => {
-    const characterName = generateShareUrl(agent.name.toLowerCase());
+    const url = generateShareUrl(agent.name.toLowerCase());
     
-    try {
-      if (navigator.share) {
-        // Use native sharing on mobile
-        await navigator.share({
-          title: `Talk to ${agent.name} on Wave`,
-          text: `Check out ${agent.name} on Wave - your AI companion for meaningful conversations!`,
-          url: characterName,
-        });
-      } else {
-        // Fallback: copy to clipboard
-        await navigator.clipboard.writeText(characterName);
-        toast.success('Link copied to clipboard!');
-      }
-    } catch (error) {
-      console.error('Error sharing:', error);
-      // Fallback: copy to clipboard
+    // Check if it's a mobile device
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
+    if (isMobile) {
+      // Use native sharing on mobile
       try {
-        await navigator.clipboard.writeText(characterName);
-        toast.success('Link copied to clipboard!');
-      } catch (clipboardError) {
-        console.error('Error copying to clipboard:', clipboardError);
-        toast.error('Failed to share link');
+        if (navigator.share) {
+          await navigator.share({
+            title: `Talk to ${agent.name} on Wave`,
+            text: `Check out ${agent.name} on Wave - your AI companion for meaningful conversations!`,
+            url: url,
+          });
+        } else {
+          // Fallback: copy to clipboard
+          await navigator.clipboard.writeText(url);
+          toast.success('Link copied to clipboard!');
+        }
+      } catch (error) {
+        console.error('Error sharing:', error);
+        // Fallback: copy to clipboard
+        try {
+          await navigator.clipboard.writeText(url);
+          toast.success('Link copied to clipboard!');
+        } catch (clipboardError) {
+          console.error('Error copying to clipboard:', clipboardError);
+          toast.error('Failed to share link');
+        }
       }
+    } else {
+      // Show popover on desktop
+      setShareUrl(url);
+      setShowSharePopover(true);
+    }
+  };
+
+  const handleCopyUrl = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success('Link copied to clipboard!');
+      setShowSharePopover(false);
+    } catch (error) {
+      console.error('Error copying to clipboard:', error);
+      toast.error('Failed to copy link');
     }
   };
 
@@ -72,6 +113,50 @@ export default function SwipeableAgentCard({ agent, onSwipeLeft, onSwipeRight, o
           >
             <FaShare size={16} />
           </button>
+
+          {/* Share Popover - Desktop Only */}
+          <AnimatePresence>
+            {showSharePopover && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                transition={{ duration: 0.2 }}
+                className="absolute top-16 right-4 bg-white rounded-lg shadow-lg border border-gray-200 p-4 z-20 hidden md:block min-w-[300px]"
+                ref={popoverRef}
+              >
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-semibold text-gray-900">Share {agent.name}</h3>
+                  <button
+                    onClick={() => setShowSharePopover(false)}
+                    className="text-gray-400 hover:text-gray-600 transition-colors"
+                  >
+                    <FaTimes size={14} />
+                  </button>
+                </div>
+                
+                <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-md border border-gray-200">
+                  <input
+                    type="text"
+                    value={shareUrl}
+                    readOnly
+                    className="flex-1 text-sm text-gray-700 bg-transparent border-none outline-none"
+                  />
+                  <button
+                    onClick={handleCopyUrl}
+                    className="p-2 text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-md transition-colors"
+                    title="Copy URL"
+                  >
+                    <FaCopy size={14} />
+                  </button>
+                </div>
+                
+                <p className="text-xs text-gray-500 mt-2">
+                  Copy this link to share {agent.name} with friends
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div className="flex-1 w-full flex flex-col items-center">
             <div className="w-24 h-24 rounded-full bg-gradient-to-br from-[#6B4EFF] to-[#F7BFA3] flex items-center justify-center overflow-hidden mb-5">

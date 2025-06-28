@@ -7,7 +7,13 @@ export async function middleware(req) {
   if (shouldBypassAuthServer()) {
     // If trying to access login page on localhost, redirect directly to dashboard
     if (req.nextUrl.pathname === '/login') {
-      return NextResponse.redirect(new URL('/dashboard', req.url));
+      const redirectUrl = new URL('/dashboard', req.url);
+      // Preserve character parameter if present
+      const characterParam = req.nextUrl.searchParams.get('character');
+      if (characterParam) {
+        redirectUrl.searchParams.set('character', characterParam);
+      }
+      return NextResponse.redirect(redirectUrl);
     }
     return NextResponse.next();
   }
@@ -31,12 +37,23 @@ export async function middleware(req) {
   if (isProtectedRoute && !session && !isLocalhostServer()) {
     const redirectUrl = new URL('/login', req.url);
     redirectUrl.searchParams.set('redirectedFrom', req.nextUrl.pathname);
+    // Preserve character parameter if present
+    const characterParam = req.nextUrl.searchParams.get('character');
+    if (characterParam) {
+      redirectUrl.searchParams.set('character', characterParam);
+    }
     return NextResponse.redirect(redirectUrl);
   }
 
   // If accessing login page with a session, redirect to dashboard
   if (req.nextUrl.pathname === '/login' && session) {
-    return NextResponse.redirect(new URL('/dashboard', req.url));
+    const redirectUrl = new URL('/dashboard', req.url);
+    // Preserve character parameter if present
+    const characterParam = req.nextUrl.searchParams.get('character');
+    if (characterParam) {
+      redirectUrl.searchParams.set('character', characterParam);
+    }
+    return NextResponse.redirect(redirectUrl);
   }
 
   return res;

@@ -68,45 +68,61 @@ export default function CharacterReveal() {
       const data = await res.json();
       
       if (data && data.length) {
+        // Check for character parameter in URL first
+        const urlParams = new URLSearchParams(window.location.search);
+        const characterParam = urlParams.get('character');
+        let targetCharacterId = null;
+        
+        if (characterParam) {
+          targetCharacterId = getCharacterId(characterParam);
+        }
+        
         // Separate characters into groups
         const priorityGroup = data.filter(char => [4, 5, 6].includes(char.id)); // IDs 4, 5, 6
         const otherGroup = data.filter(char => [1, 2, 3, 7, 8, 9].includes(char.id)); // IDs 1, 2, 3, 7, 8, 9
         
-        // Shuffle the other group
-        const shuffledOtherGroup = [...otherGroup].sort(() => Math.random() - 0.5);
+        let orderedCharacters = [];
         
-        // Combine: First 3 are always 4,5,6 (in order), then shuffled others
-        const orderedCharacters = [
-          ...priorityGroup, // First 3 positions: IDs 4, 5, 6
-          ...shuffledOtherGroup // Remaining 6 positions: shuffled IDs 1, 2, 3, 7, 8, 9
-        ];
+        if (targetCharacterId) {
+          // Find the target character
+          const targetCharacter = data.find(char => char.id === targetCharacterId);
+          if (targetCharacter) {
+            // Put target character first
+            orderedCharacters.push(targetCharacter);
+            
+            // Remove target character from its original group
+            const remainingPriority = priorityGroup.filter(char => char.id !== targetCharacterId);
+            const remainingOther = otherGroup.filter(char => char.id !== targetCharacterId);
+            
+            // Add remaining priority characters (in order)
+            orderedCharacters.push(...remainingPriority);
+            
+            // Shuffle and add remaining other characters
+            const shuffledRemainingOther = [...remainingOther].sort(() => Math.random() - 0.5);
+            orderedCharacters.push(...shuffledRemainingOther);
+          } else {
+            // Fallback to original logic if target character not found
+            const shuffledOtherGroup = [...otherGroup].sort(() => Math.random() - 0.5);
+            orderedCharacters = [
+              ...priorityGroup,
+              ...shuffledOtherGroup
+            ];
+          }
+        } else {
+          // Original logic when no character parameter
+          const shuffledOtherGroup = [...otherGroup].sort(() => Math.random() - 0.5);
+          orderedCharacters = [
+            ...priorityGroup,
+            ...shuffledOtherGroup
+          ];
+        }
         
         setCharacters(orderedCharacters);
         
-        // Check for character parameter in URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const characterParam = urlParams.get('character');
-        
-        if (characterParam) {
-          const characterId = getCharacterId(characterParam);
-          if (characterId) {
-            // Find the character in the ordered list
-            const characterIndex = orderedCharacters.findIndex(char => char.id === characterId);
-            if (characterIndex !== -1) {
-              setCurrentIndex(characterIndex);
-              setCurrentCharacter(orderedCharacters[characterIndex]);
-              // Clean up URL
-              const newUrl = new URL(window.location);
-              newUrl.searchParams.delete('character');
-              window.history.replaceState({}, '', newUrl);
-              return;
-            }
-          }
-        }
-        
-        // Set the first character (ID 4) as current if no character parameter
+        // Set the first character as current (will be target character if specified)
         if (orderedCharacters.length > 0) {
           setCurrentCharacter(orderedCharacters[0]);
+          setCurrentIndex(0);
         }
       }
       trackVisitWithEmail("dashboard_visits");
