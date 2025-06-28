@@ -5,7 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import CharacterReveal from '../../components/CharacterReveal';
 import OnboardingModal from '../../components/OnboardingModal';
 
-const SHOW_ONBOARDING_KEY = 'showOnboardingKey2';
+const SHOW_ONBOARDING_KEY = 'showOnboardingKey';
 
 export default function Dashboard() {
   const [showOnboarding, setShowOnboarding] = useState(false);
