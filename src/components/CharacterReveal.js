@@ -78,8 +78,8 @@ export default function CharacterReveal() {
         }
         
         // Separate characters into groups
-        const priorityGroup = data.filter(char => [1, 7, 8].includes(char.id)); // IDs 4, 5, 6
-        const otherGroup = data.filter(char => [4, 2, 3, 5, 6, 9].includes(char.id)); // IDs 1, 2, 3, 7, 8, 9
+        const priorityGroup = data.filter(char => [4, 5, 6].includes(char.id)); // IDs 4, 5, 6
+        const otherGroup = data.filter(char => [1, 2, 3, 7, 8, 9].includes(char.id)); // IDs 1, 2, 3, 7, 8, 9
         
         let orderedCharacters = [];
         
